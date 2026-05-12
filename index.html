@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyKids 🐍 — Learn Python Like a Hero!</title>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulkt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulkt-stdlib.js"></script>
+<style>
+/* ===== DESIGN SYSTEM ===== */
+:root {
+  --bg:       #07071a;
+  --bg2:      #0e0e28;
+  --bg3:      #16163a;
+  --card:     #1c1c44;
+  --card2:    #22225a;
+  --border:   rgba(110,102,255,.25);
+  --purple:   #6E66FF;
+  --purple2:  #9B96FF;
+  --gold:     #FFD740;
+  --green:    #00E676;
+  --cyan:     #18CFFF;
+  --coral:    #FF6B6B;
+  --pink:     #FF4FCA;
+  --orange:   #FF9640;
+  --text:     #dde4ff;
+  --dim:      #7880a8;
+  --r:        14px;
+  --shadow:   0 12px 48px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--purple);border-radius:3px}
+
+/* ===== STARS BG ===== */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 72% 8%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 44% 55%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 35%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 75%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 45%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 95% 65%, rgba(255,255,255,.4) 0%, transparent 100%);
+  pointer-events:none;z-index:0;
+}
+
+/* ===== LAYOUT ===== */
+#app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ===== TOP NAV ===== */
+#topnav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 28px;
+  background:rgba(14,14,40,.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  gap:16px;
+}
+.nav-logo{
+  font-family:'Righteous',sans-serif;
+  font-size:1.7rem;
+  background:linear-gradient(135deg,var(--cyan),var(--purple2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;
+}
+.nav-logo span{font-size:1.5rem;-webkit-text-fill-color:initial}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-btn{
+  background:none;border:1px solid transparent;color:var(--dim);
+  padding:7px 14px;border-radius:30px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
+  transition:all .2s;white-space:nowrap;
+}
+.nav-btn:hover,.nav-btn.active{
+  background:rgba(110,102,255,.18);border-color:var(--purple);color:var(--text)
+}
+.nav-xp{
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:var(--card);border:1px solid var(--border);border-radius:40px;padding:6px 16px;
+}
+.xp-star{font-size:1.1rem}
+.xp-info{display:flex;flex-direction:column;align-items:flex-start}
+.xp-label{font-size:.7rem;color:var(--dim);font-weight:700;line-height:1}
+.xp-val{font-size:.95rem;font-weight:900;color:var(--gold);line-height:1.2}
+.xp-bar-wrap{width:70px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.xp-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .5s ease;border-radius:3px}
+.level-badge{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.85rem;flex-shrink:0;box-shadow:0 0 12px rgba(110,102,255,.5);
+}
+.streak-badge{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(255,150,64,.15);border:1px solid rgba(255,150,64,.4);
+  border-radius:30px;padding:5px 12px;color:var(--orange);font-weight:800;font-size:.85rem;
+}
+
+/* ===== SECTIONS ===== */
+.section{display:none;animation:fadeUp .35s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1100px;margin:0 auto;padding:28px 20px}
+
+/* ===== HOME ===== */
+.hero{
+  text-align:center;padding:50px 20px 30px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(110,102,255,.15) 0%,transparent 70%);
+}
+.hero-mascot{font-size:5.5rem;animation:bounce 2s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 0 20px rgba(110,102,255,.5))}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.hero h1{font-family:'Righteous',sans-serif;font-size:clamp(2rem,5vw,3.5rem);margin:10px 0 8px;line-height:1.1}
+.hero h1 span{background:linear-gradient(135deg,var(--cyan),var(--purple2),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--dim);font-size:1.1rem;max-width:500px;margin:0 auto 24px}
+.cta-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:12px 28px;border-radius:40px;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:.95rem;cursor:pointer;border:none;
+  transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;box-shadow:0 4px 20px rgba(110,102,255,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(110,102,255,.6)}
+.btn-outline{background:transparent;border:2px solid var(--purple);color:var(--purple2)}
+.btn-outline:hover{background:rgba(110,102,255,.15);transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1000;box-shadow:0 4px 20px rgba(255,215,64,.3)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,215,64,.4)}
+.btn-sm{padding:8px 18px;font-size:.85rem}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--cyan));color:#001a0d;box-shadow:0 4px 16px rgba(0,230,118,.3)}
+.btn-coral{background:linear-gradient(135deg,var(--coral),var(--pink));color:#fff}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:32px 0}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;
+  transition:transform .2s;cursor:default;
+}
+.stat-card:hover{transform:translateY(-3px)}
+.stat-icon{font-size:2.2rem;margin-bottom:8px}
+.stat-val{font-size:1.8rem;font-weight:900;font-family:'Righteous',sans-serif}
+.stat-label{font-size:.78rem;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+
+/* Worlds grid */
+.worlds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.world-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;
+  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
+}
+.world-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--wc,var(--purple)),transparent);
+  opacity:.08;transition:opacity .25s;
+}
+.world-card:hover::before{opacity:.18}
+.world-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--wc,var(--purple))}
+.world-card.locked{opacity:.5;cursor:not-allowed}
+.world-icon{font-size:2.8rem;margin-bottom:10px}
+.world-title{font-family:'Righteous',sans-serif;font-size:1.05rem;margin-bottom:4px}
+.world-sub{font-size:.78rem;color:var(--dim)}
+.world-progress{margin-top:12px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.world-progress-bar{height:100%;border-radius:3px;transition:width .5s ease}
+.world-status{
+  position:absolute;top:14px;right:14px;
+  font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;
+  background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);
+}
+.world-status.locked{background:rgba(120,120,160,.15);color:var(--dim);border-color:rgba(120,120,160,.3)}
+
+/* ===== WORLDS / LESSONS LIST ===== */
+.world-header{
+  background:linear-gradient(135deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-bottom:24px;
+  display:flex;align-items:center;gap:20px;
+}
+.world-header .big-icon{font-size:3.5rem}
+.world-header h2{font-family:'Righteous',sans-serif;font-size:1.8rem}
+.world-header p{color:var(--dim);margin-top:4px}
+.lessons-list{display:flex;flex-direction:column;gap:12px}
+.lesson-item{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .2s;
+}
+.lesson-item:hover:not(.locked-item){background:var(--card2);border-color:var(--purple);transform:translateX(4px)}
+.lesson-item.locked-item{opacity:.5;cursor:not-allowed}
+.lesson-item.done{border-color:rgba(0,230,118,.4)}
+.lesson-num{
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.9rem;flex-shrink:0;
+  background:var(--bg3);color:var(--dim);border:2px solid var(--border);
+}
+.lesson-item.done .lesson-num{background:rgba(0,230,118,.15);color:var(--green);border-color:var(--green)}
+.lesson-info{flex:1}
+.lesson-title{font-weight:800;font-size:.95rem}
+.lesson-desc{font-size:.78rem;color:var(--dim);margin-top:2px}
+.lesson-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.tag{
+  font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;
+  background:rgba(110,102,255,.15);color:var(--purple2);border:1px solid rgba(110,102,255,.25);
+}
+.xp-badge{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(255,215,64,.1);border:1px solid rgba(255,215,64,.25);
+  border-radius:20px;padding:4px 10px;color:var(--gold);font-weight:800;font-size:.8rem;flex-shrink:0;
+}
+.check-icon{font-size:1.3rem;flex-shrink:0}
+
+/* ===== LESSON VIEWER ===== */
+.lesson-viewer{max-width:900px;margin:0 auto}
+.lesson-top-bar{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;
+}
+.back-btn{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:8px 16px;border-radius:30px;cursor:pointer;font-family:'Nunito',sans-serif;
+  font-weight:700;font-size:.85rem;transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.back-btn:hover{border-color:var(--purple);background:var(--card2)}
+.lesson-badge{
+  background:linear-gradient(135deg,rgba(110,102,255,.2),rgba(24,207,255,.1));
+  border:1px solid var(--border);border-radius:30px;padding:6px 16px;
+  font-size:.82rem;color:var(--purple2);font-weight:700;
+}
+.lesson-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;
+  margin-bottom:20px;
+}
+.lesson-card h2{font-family:'Righteous',sans-serif;font-size:1.6rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.lesson-card .subtitle{color:var(--dim);font-size:.9rem;margin-bottom:20px}
+.theory-block{
+  background:var(--bg2);border-left:4px solid var(--purple);border-radius:0 10px 10px 0;
+  padding:16px 20px;margin-bottom:20px;line-height:1.7;font-size:.93rem;
+}
+.theory-block h3{font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--purple2)}
+.theory-block ul{padding-left:18px;margin-top:8px}
+.theory-block li{margin-bottom:5px}
+.theory-block code{font-family:'Fira Code',monospace;background:var(--bg3);padding:1px 6px;border-radius:5px;font-size:.85em;color:var(--cyan)}
+.analogy-box{
+  background:rgba(255,215,64,.06);border:1px solid rgba(255,215,64,.2);
+  border-radius:10px;padding:14px 18px;margin-bottom:20px;
+  font-size:.88rem;line-height:1.6;color:#e8d890;
+}
+.analogy-box strong{color:var(--gold)}
+
+/* Code blocks */
+.code-label{font-size:.78rem;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.example-block{
+  background:#0d1117;border:1px solid rgba(110,102,255,.2);border-radius:10px;overflow:hidden;margin-bottom:20px;
+}
+.code-header{
+  background:rgba(110,102,255,.1);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(110,102,255,.15);
+}
+.code-header span{font-size:.75rem;color:var(--dim);font-weight:700}
+.copy-btn{
+  background:none;border:1px solid var(--border);color:var(--dim);padding:3px 10px;
+  border-radius:20px;cursor:pointer;font-size:.72rem;font-family:'Nunito',sans-serif;font-weight:700;
+  transition:all .2s;
+}
+.copy-btn:hover{border-color:var(--purple);color:var(--purple2)}
+.code-content{padding:16px;font-family:'Fira Code',monospace;font-size:.88rem;line-height:1.7;overflow-x:auto;white-space:pre}
+/* Syntax highlighting */
+.kw{color:#ff79c6}
+.fn{color:#50fa7b}
+.str{color:#f1fa8c}
+.num{color:#bd93f9}
+.cm{color:#6272a4;font-style:italic}
+.bi{color:#8be9fd}
+
+/* Editor */
+.editor-section{margin-bottom:20px}
+.editor-section h3{font-size:1rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.editor-wrap{background:#0d1117;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.editor-toolbar{
+  background:rgba(110,102,255,.08);padding:8px 12px;
+  display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(110,102,255,.15);
+  flex-wrap:wrap;gap:8px;
+}
+.editor-tabs{display:flex;gap:6px}
+.editor-tab{
+  font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:20px;
+  background:var(--bg3);color:var(--dim);border:1px solid transparent;cursor:pointer;transition:all .2s;
+}
+.editor-tab.active{background:rgba(110,102,255,.2);color:var(--purple2);border-color:rgba(110,102,255,.3)}
+.run-btn{
+  background:linear-gradient(135deg,var(--green),#00c65a);color:#001a0d;
+  padding:7px 18px;border-radius:30px;font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:.82rem;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.run-btn:hover{transform:scale(1.03);box-shadow:0 4px 16px rgba(0,230,118,.3)}
+.run-btn:active{transform:scale(.98)}
+#py-editor{
+  width:100%;min-height:160px;background:transparent;border:none;outline:none;
+  font-family:'Fira Code',monospace;font-size:.9rem;color:#f8f8f2;padding:16px;
+  resize:vertical;line-height:1.7;
+}
+.output-area{
+  border-top:1px solid rgba(110,102,255,.15);background:#070710;
+  padding:14px 16px;min-height:60px;font-family:'Fira Code',monospace;font-size:.87rem;
+  line-height:1.7;max-height:220px;overflow-y:auto;white-space:pre-wrap;
+}
+.output-area:empty::before{content:'// Output will appear here...';color:var(--dim);font-style:italic}
+.output-header{
+  background:rgba(0,0,0,.3);padding:6px 14px;font-size:.72rem;font-weight:700;
+  color:var(--dim);text-transform:uppercase;letter-spacing:.07em;border-top:1px solid rgba(110,102,255,.1);
+  display:flex;align-items:center;gap:6px;
+}
+.output-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Challenge */
+.challenge-box{
+  background:linear-gradient(135deg,rgba(0,230,118,.05),rgba(24,207,255,.05));
+  border:1px solid rgba(0,230,118,.25);border-radius:var(--r);padding:20px;margin-top:20px;
+}
+.challenge-box h3{color:var(--green);font-size:1rem;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.challenge-box p{font-size:.88rem;color:var(--dim);line-height:1.6;margin-bottom:12px}
+.hint-btn{
+  background:rgba(255,215,64,.08);border:1px solid rgba(255,215,64,.2);color:var(--gold);
+  padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.8rem;font-weight:700;
+  transition:all .2s;margin-top:8px;font-family:'Nunito',sans-serif;
+}
+.hint-btn:hover{background:rgba(255,215,64,.15)}
+.hint-text{
+  background:rgba(255,215,64,.06);border-left:3px solid var(--gold);
+  padding:10px 14px;margin-top:10px;font-size:.85rem;border-radius:0 8px 8px 0;
+  display:none;color:#e8d890;
+}
+.lesson-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+/* ===== QUIZ ===== */
+.quiz-container{max-width:720px;margin:0 auto}
+.quiz-header-card{
+  background:linear-gradient(135deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;text-align:center;
+}
+.quiz-header-card h2{font-family:'Righteous',sans-serif;font-size:1.7rem;margin-bottom:6px}
+.quiz-header-card p{color:var(--dim)}
+.q-progress{margin:16px 0 4px;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.q-progress-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .4s ease;border-radius:4px}
+.q-counter{font-size:.82rem;color:var(--dim);font-weight:700}
+.quiz-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;
+  margin-bottom:16px;animation:fadeUp .3s ease;
+}
+.q-num{font-size:.75rem;font-weight:800;color:var(--purple2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.q-text{font-size:1.1rem;font-weight:700;line-height:1.5;margin-bottom:20px}
+.q-code{
+  background:#0d1117;border-radius:8px;padding:14px 16px;margin-bottom:16px;
+  font-family:'Fira Code',monospace;font-size:.85rem;white-space:pre;overflow-x:auto;
+  border:1px solid rgba(110,102,255,.2);line-height:1.7;
+}
+.options-grid{display:grid;gap:10px}
+.option-btn{
+  background:var(--bg3);border:2px solid var(--border);border-radius:10px;
+  padding:13px 18px;text-align:left;cursor:pointer;transition:all .2s;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.92rem;color:var(--text);
+}
+.option-btn:hover:not(:disabled){background:rgba(110,102,255,.15);border-color:var(--purple)}
+.option-btn.correct{background:rgba(0,230,118,.12);border-color:var(--green);color:var(--green)}
+.option-btn.wrong{background:rgba(255,107,107,.12);border-color:var(--coral);color:var(--coral)}
+.option-btn:disabled{cursor:not-allowed}
+.q-feedback{
+  border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.88rem;font-weight:700;
+  display:none;animation:fadeUp .2s ease;
+}
+.q-feedback.show{display:block}
+.q-feedback.good{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.25)}
+.q-feedback.bad{background:rgba(255,107,107,.1);color:var(--coral);border:1px solid rgba(255,107,107,.25)}
+.next-btn{
+  width:100%;margin-top:16px;background:linear-gradient(135deg,var(--purple),var(--cyan));
+  border:none;border-radius:10px;padding:14px;color:#fff;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:1rem;cursor:pointer;transition:all .2s;display:none;
+}
+.next-btn.show{display:block}
+.next-btn:hover{transform:scale(1.01);box-shadow:0 4px 20px rgba(110,102,255,.4)}
+.quiz-result{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:40px 28px;text-align:center;animation:fadeUp .4s ease;
+}
+.result-emoji{font-size:4.5rem;display:block;margin-bottom:14px;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.6)}to{transform:scale(1)}}
+.result-score{font-family:'Righteous',sans-serif;font-size:3rem;margin-bottom:6px}
+.result-grade{font-size:1rem;color:var(--dim);margin-bottom:20px}
+
+/* ===== PLAYGROUND ===== */
+.playground-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:720px){.playground-wrap{grid-template-columns:1fr}}
+.playground-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.playground-header{
+  padding:14px 18px;background:rgba(110,102,255,.08);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.playground-header h3{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:8px}
+#pg-editor{
+  width:100%;min-height:340px;background:#0d1117;border:none;outline:none;
+  font-family:'Fira Code',monospace;font-size:.88rem;color:#f8f8f2;padding:16px;
+  resize:none;line-height:1.8;
+}
+#pg-output{
+  min-height:160px;max-height:280px;overflow-y:auto;padding:14px 16px;
+  background:#070710;font-family:'Fira Code',monospace;font-size:.87rem;
+  line-height:1.7;white-space:pre-wrap;
+}
+.pg-toolbar{padding:10px 16px;background:rgba(0,0,0,.3);display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid rgba(110,102,255,.1)}
+.snippet-btn{
+  background:var(--bg3);border:1px solid var(--border);color:var(--dim);
+  padding:4px 10px;border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:700;
+  transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.snippet-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ===== ACHIEVEMENTS ===== */
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.achievement-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;display:flex;gap:14px;align-items:flex-start;transition:all .2s;
+}
+.achievement-card.earned{border-color:rgba(255,215,64,.3);background:rgba(255,215,64,.04)}
+.achievement-card:not(.earned){filter:grayscale(.8);opacity:.5}
+.ach-icon{font-size:2.2rem;flex-shrink:0}
+.ach-title{font-weight:800;font-size:.9rem;margin-bottom:3px}
+.ach-desc{font-size:.75rem;color:var(--dim);line-height:1.4}
+.ach-date{font-size:.7rem;color:var(--gold);margin-top:4px;font-weight:700}
+
+/* ===== TOAST / NOTIFICATION ===== */
+#toast{
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  background:linear-gradient(135deg,var(--card2),var(--card));
+  border:1px solid var(--gold);border-radius:14px;padding:14px 20px;
+  display:flex;align-items:center;gap:12px;max-width:320px;
+  transform:translateY(120%);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+#toast.show{transform:translateY(0)}
+#toast-icon{font-size:1.8rem}
+#toast-text{font-size:.88rem;font-weight:700;line-height:1.4}
+#toast-xp{color:var(--gold);font-size:.8rem;font-weight:800;margin-top:2px}
+
+/* ===== XP POPUP ===== */
+.xp-popup{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.5);
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:#1a0d00;font-family:'Righteous',sans-serif;font-size:2.5rem;
+  padding:20px 40px;border-radius:20px;z-index:998;
+  animation:xpPop 1.4s ease forwards;pointer-events:none;
+  box-shadow:0 0 60px rgba(255,215,64,.6);
+}
+@keyframes xpPop{
+  0%{transform:translate(-50%,-50%) scale(.5);opacity:0}
+  20%{transform:translate(-50%,-50%) scale(1.05);opacity:1}
+  50%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  80%{transform:translate(-50%,-60%) scale(.95);opacity:1}
+  100%{transform:translate(-50%,-80%) scale(.8);opacity:0}
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:700px){
+  #topnav{padding:10px 14px}
+  .nav-links{display:none}
+  .container{padding:16px 12px}
+  .hero h1{font-size:1.8rem}
+  .playground-wrap{grid-template-columns:1fr}
+  .world-header{flex-direction:column;text-align:center}
+}
+
+/* ===== SCROLLBAR FOR OUTPUT ===== */
+.output-area::-webkit-scrollbar{width:4px}
+.output-area::-webkit-scrollbar-thumb{background:var(--purple)}
+
+/* ===== SPECIAL ELEMENTS ===== */
+.section-title{
+  font-family:'Righteous',sans-serif;font-size:1.5rem;margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-desc{color:var(--dim);font-size:.88rem;margin-bottom:24px}
+.divider{height:1px;background:var(--border);margin:24px 0}
+.tip-box{
+  background:rgba(24,207,255,.06);border:1px solid rgba(24,207,255,.2);
+  border-radius:10px;padding:12px 16px;font-size:.85rem;line-height:1.6;
+  color:#a8e8ff;margin:12px 0;
+}
+.tip-box strong{color:var(--cyan)}
+.warning-box{
+  background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);
+  border-radius:10px;padding:12px 16px;font-size:.85rem;line-height:1.6;color:#ffc4c4;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- TOP NAV -->
+<nav id="topnav">
+  <div class="nav-logo" onclick="goHome()"><span>🐍</span> PyKids</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="navigate('home')">🏠 Home</button>
+    <button class="nav-btn" onclick="navigate('worlds')">🗺️ Worlds</button>
+    <button class="nav-btn" onclick="navigate('playground')">⚡ Lab</button>
+    <button class="nav-btn" onclick="navigate('quiz')">🧩 Quiz</button>
+    <button class="nav-btn" onclick="navigate('achievements')">🏆 Badges</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="streak-badge"><span>🔥</span><span id="streak-val">0</span>d</div>
+    <div class="nav-xp">
+      <span class="xp-star">⭐</span>
+      <div class="xp-info">
+        <span class="xp-label">XP</span>
+        <span class="xp-val" id="nav-xp">0</span>
+      </div>
+      <div class="xp-bar-wrap"><div class="xp-bar" id="nav-xp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="level-badge" id="nav-level">1</div>
+  </div>
+</nav>
+
+<!-- ==================== HOME ==================== -->
+<div id="home" class="section active">
+  <div class="hero">
+    <div class="hero-mascot">🐍</div>
+    <h1>Learn Python,<br><span>Code Like a Hero!</span></h1>
+    <p>From zero to Python expert — through quests, challenges & real projects. Made for 6th graders! 🚀</p>
+    <div class="cta-group">
+      <button class="btn btn-primary" onclick="navigate('worlds')">🗺️ Start Your Quest</button>
+      <button class="btn btn-outline" onclick="navigate('playground')">⚡ Try the Lab</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">🏅</div>
+        <div class="stat-val" id="stat-xp" style="color:var(--gold)">0</div>
+        <div class="stat-label">Total XP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-val" id="stat-level" style="color:var(--purple2)">1</div>
+        <div class="stat-label">Hero Level</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-val" id="stat-done" style="color:var(--green)">0</div>
+        <div class="stat-label">Lessons Done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-val" id="stat-badges" style="color:var(--coral)">0</div>
+        <div class="stat-label">Badges Earned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-val" id="stat-streak" style="color:var(--orange)">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+
+    <div class="section-title">🗺️ Your Worlds</div>
+    <div class="section-desc">Complete worlds in order — each unlocks the next!</div>
+    <div class="worlds-grid" id="home-worlds"></div>
+
+    <div class="divider"></div>
+    <div class="section-title">💡 Did You Know?</div>
+    <div class="tip-box" id="daily-tip">Loading tip...</div>
+  </div>
+</div>
+
+<!-- ==================== WORLDS ==================== -->
+<div id="worlds" class="section">
+  <div class="container">
+    <div class="section-title">🗺️ Adventure Worlds</div>
+    <div class="section-desc">Each world teaches new Python powers. Complete all lessons to unlock the next!</div>
+    <div class="worlds-grid" id="worlds-list"></div>
+  </div>
+</div>
+
+<!-- ==================== LESSON LIST ==================== -->
+<div id="lesson-list" class="section">
+  <div class="container">
+    <div class="world-header" id="lesson-list-header">
+      <div class="big-icon" id="ll-icon">🌄</div>
+      <div>
+        <h2 id="ll-title">World</h2>
+        <p id="ll-desc">Description</p>
+      </div>
+    </div>
+    <div class="lessons-list" id="lessons-container"></div>
+    <div style="margin-top:20px">
+      <button class="back-btn" onclick="navigate('worlds')">← Back to Worlds</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LESSON VIEWER ==================== -->
+<div id="lesson-view" class="section">
+  <div class="container">
+    <div class="lesson-viewer">
+      <div class="lesson-top-bar">
+        <button class="back-btn" id="lesson-back-btn" onclick="backToList()">← Back</button>
+        <span class="lesson-badge" id="lesson-world-badge">World 1</span>
+        <div class="xp-badge">⭐ <span id="lesson-xp-val">50</span> XP</div>
+      </div>
+      <div id="lesson-content-area"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div id="quiz" class="section">
+  <div class="container">
+    <div class="quiz-container" id="quiz-container">
+      <div class="quiz-header-card">
+        <div style="font-size:2.5rem;margin-bottom:8px">🧩</div>
+        <h2>Python Quiz Arena</h2>
+        <p>Test your Python knowledge and earn XP!</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="startQuiz('easy')">🌱 Beginner</button>
+          <button class="btn btn-gold btn-sm" onclick="startQuiz('medium')">🔥 Intermediate</button>
+          <button class="btn btn-coral btn-sm" onclick="startQuiz('hard')">💀 Advanced</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PLAYGROUND ==================== -->
+<div id="playground" class="section">
+  <div class="container">
+    <div class="section-title">⚡ Python Lab</div>
+    <div class="section-desc">Write any Python code and run it instantly! Experiment freely.</div>
+    <div class="playground-wrap">
+      <div class="playground-card">
+        <div class="playground-header">
+          <h3>📝 Code Editor</h3>
+          <button class="run-btn" onclick="runPlayground()">▶ Run</button>
+        </div>
+        <textarea id="pg-editor" spellcheck="false">print("Hello, PyKids! 🐍")
+name = input("What's your name? ")
+print("Welcome,", name, "! You're a Python hero!")
+
+# Try changing this code and press Run!
+for i in range(5):
+    print("⭐" * (i+1))</textarea>
+        <div class="pg-toolbar">
+          <span style="font-size:.75rem;font-weight:700;color:var(--dim);margin-right:4px">Snippets:</span>
+          <button class="snippet-btn" onclick="insertSnippet('hello')">Hello World</button>
+          <button class="snippet-btn" onclick="insertSnippet('loop')">For Loop</button>
+          <button class="snippet-btn" onclick="insertSnippet('func')">Function</button>
+          <button class="snippet-btn" onclick="insertSnippet('list')">List</button>
+          <button class="snippet-btn" onclick="insertSnippet('guess')">Guess Game</button>
+          <button class="snippet-btn" onclick="clearPG()">🗑️ Clear</button>
+        </div>
+      </div>
+      <div class="playground-card">
+        <div class="playground-header">
+          <h3>📤 Output</h3>
+          <button class="copy-btn" onclick="copyOutput()">Copy</button>
+        </div>
+        <div id="pg-output" style="color:#f8f8f2">// Press Run to see output...</div>
+        <div class="output-header"><div class="output-dot"></div> Live Python Runtime (Skulpt)</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title" style="font-size:1.2rem">🎓 Quick Reference</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:12px" id="quick-ref"></div>
+  </div>
+</div>
+
+<!-- ==================== ACHIEVEMENTS ==================== -->
+<div id="achievements" class="section">
+  <div class="container">
+    <div class="section-title">🏆 Badge Collection</div>
+    <div class="section-desc">Complete challenges and milestones to earn badges!</div>
+    <div class="achievements-grid" id="achievements-grid"></div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast">
+  <div id="toast-icon">🎉</div>
+  <div>
+    <div id="toast-text">Achievement Unlocked!</div>
+    <div id="toast-xp">+50 XP</div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ==================== DATA ====================
+const WORLDS = [
+  {
+    id: 0, title: "Python Valley", icon: "🌄",
+    color: "var(--cyan)",
+    desc: "Begin your journey — variables, printing, and user input",
+    lessons: [0,1,2,3,4]
+  },
+  {
+    id: 1, title: "Logic Jungle", icon: "🌴",
+    color: "var(--green)",
+    desc: "Make decisions with if/else and repeat with loops",
+    lessons: [5,6,7,8,9]
+  },
+  {
+    id: 2, title: "Function Mountains", icon: "⛰️",
+    color: "var(--purple)",
+    desc: "Create your own reusable Python spells (functions!)",
+    lessons: [10,11,12,13]
+  },
+  {
+    id: 3, title: "Data Dragon's Den", icon: "🐉",
+    color: "var(--gold)",
+    desc: "Tame lists and dictionaries — store and organize data",
+    lessons: [14,15,16,17]
+  },
+  {
+    id: 4, title: "Project Summit", icon: "🏔️",
+    color: "var(--pink)",
+    desc: "Build real Python projects! A game, a generator, a calculator",
+    lessons: [18,19,20]
+  }
+];
+
+const LESSONS = [
+  // ---- WORLD 0 ----
+  {
+    id: 0, world: 0, title: "Say Hello to Python!", xp: 40,
+    icon: "👋", tags: ["print","output","basics"],
+    desc: "Learn how to make Python talk to you!",
+    theory: `Python is a <strong>programming language</strong> — a way to give instructions to a computer. Think of it like teaching a robot to do exactly what you say!<br><br>
+The very first thing every Python coder learns is <code>print()</code>. It tells Python to show a message on the screen.<br><br>
+<strong>Syntax:</strong> <code>print("Your message here")</code><br><br>
+The message must go inside <strong>quotes</strong> (" " or ' ') and inside <strong>parentheses</strong> ( ).`,
+    analogy: `🎤 <strong>Think of print() as a megaphone!</strong> Whatever you put inside the parentheses, Python shouts it out on the screen. No megaphone = no shout!`,
+    example: `<span class="fn">print</span>(<span class="str">"Hello, World! 🌍"</span>)
+<span class="fn">print</span>(<span class="str">"I am learning Python!"</span>)
+<span class="fn">print</span>(<span class="str">"My name is PyKid!"</span>)
+<span class="fn">print</span>(<span class="num">42</span>)         <span class="cm"># Numbers don't need quotes!</span>
+<span class="fn">print</span>(<span class="num">3.14</span>)       <span class="cm"># Decimal numbers work too</span>`,
+    starter: `# Write your first Python program!
+# Change the message to say YOUR name!
+print("Hello, World!")
+print("I am learning Python!")
+print("My favourite number is 7")`,
+    challenge: `Change the code so it prints 3 things: your name, your age, and your school name. Each on a new line!`,
+    hint: `Use print() three times! Like: print("My name is Maya") — change Maya to your name!`,
+    tips: [`You can print numbers without quotes: print(100)`, `You can print multiple things: print("Age:", 12)`]
+  },
+  {
+    id: 1, world: 0, title: "Variables — Name Your Stuff", xp: 50,
+    icon: "📦", tags: ["variables","strings","integers"],
+    desc: "Store information in named boxes called variables",
+    theory: `A <strong>variable</strong> is like a labeled box where you store information. You give the box a name, and Python remembers what's inside!<br><br>
+To create a variable: <code>box_name = value</code><br><br>
+Python has different <strong>types</strong> of data:<br>
+• <code>str</code> — text (always in quotes): <code>"Hello"</code><br>
+• <code>int</code> — whole numbers: <code>12</code><br>
+• <code>float</code> — decimal numbers: <code>3.14</code><br>
+• <code>bool</code> — True or False<br><br>
+Variable names: use <strong>lowercase</strong>, no spaces (use <code>_</code> instead), start with a letter.`,
+    analogy: `📦 <strong>Variables are like labeled boxes!</strong> You put your name in a box called "name", your age in a box called "age". Later you just say the box name and Python gives you what's inside!`,
+    example: `<span class="cm"># Creating variables</span>
+name = <span class="str">"Alex"</span>
+age = <span class="num">12</span>
+grade = <span class="num">6</span>
+height = <span class="num">1.52</span>      <span class="cm"># in meters</span>
+is_student = <span class="kw">True</span>
+
+<span class="cm"># Using variables with print</span>
+<span class="fn">print</span>(name)
+<span class="fn">print</span>(<span class="str">"Age:"</span>, age)
+<span class="fn">print</span>(<span class="str">"Grade:"</span>, grade)
+
+<span class="cm"># Change value of a variable</span>
+age = <span class="num">13</span>     <span class="cm"># Birthday! Update the box!</span>
+<span class="fn">print</span>(<span class="str">"New age:"</span>, age)`,
+    starter: `# Create variables about yourself!
+name = "Your Name"
+age = 12
+favourite_subject = "Math"
+favourite_animal = "Dog"
+
+# Now print them nicely!
+print("Hi! My name is", name)
+print("I am", age, "years old")`,
+    challenge: `Create 5 variables about your dream superhero: name, power, city, age, team. Then print all of them in a sentence!`,
+    hint: `Try: hero_name = "Spider-Man", then print("The hero is", hero_name)`,
+    tips: [`Variable names are case-sensitive: name and Name are different!`, `You can use type() to check the type: print(type(42))`]
+  },
+  {
+    id: 2, world: 0, title: "Math Magic ✨", xp: 50,
+    icon: "🔢", tags: ["math","operators","expressions"],
+    desc: "Python can do all kinds of math in a blink!",
+    theory: `Python is a super-powered calculator! Here are all the math operations:<br><br>
+• <code>+</code> — Addition: <code>5 + 3 = 8</code><br>
+• <code>-</code> — Subtraction: <code>10 - 4 = 6</code><br>
+• <code>*</code> — Multiplication: <code>6 * 7 = 42</code><br>
+• <code>/</code> — Division: <code>15 / 4 = 3.75</code><br>
+• <code>//</code> — Floor Division (whole part only): <code>15 // 4 = 3</code><br>
+• <code>%</code> — Modulo (remainder): <code>15 % 4 = 3</code><br>
+• <code>**</code> — Power: <code>2 ** 8 = 256</code>`,
+    analogy: `🧮 <strong>Python follows PEMDAS just like math class!</strong> Parentheses → Powers → Multiply/Divide → Add/Subtract. So: 2 + 3 * 4 = 14 (not 20!)`,
+    example: `<span class="cm"># Basic math</span>
+<span class="fn">print</span>(<span class="num">10</span> + <span class="num">5</span>)        <span class="cm"># 15</span>
+<span class="fn">print</span>(<span class="num">10</span> - <span class="num">3</span>)        <span class="cm"># 7</span>
+<span class="fn">print</span>(<span class="num">6</span> * <span class="num">7</span>)         <span class="cm"># 42</span>
+<span class="fn">print</span>(<span class="num">17</span> / <span class="num">5</span>)        <span class="cm"># 3.4</span>
+<span class="fn">print</span>(<span class="num">17</span> // <span class="num">5</span>)       <span class="cm"># 3 (floor div)</span>
+<span class="fn">print</span>(<span class="num">17</span> % <span class="num">5</span>)        <span class="cm"># 2 (remainder)</span>
+<span class="fn">print</span>(<span class="num">2</span> ** <span class="num">10</span>)       <span class="cm"># 1024</span>
+
+<span class="cm"># Math with variables</span>
+price = <span class="num">25</span>
+quantity = <span class="num">4</span>
+total = price * quantity
+<span class="fn">print</span>(<span class="str">"Total cost: ₹"</span>, total)`,
+    starter: `# Math calculator!
+num1 = 48
+num2 = 6
+
+print("Addition:", num1 + num2)
+print("Subtraction:", num1 - num2)
+print("Multiplication:", num1 * num2)
+print("Division:", num1 / num2)
+print("Power (num1 to the 2nd):", num1 ** 2)
+print("Remainder when divided by 7:", num1 % 7)`,
+    challenge: `Write a program that calculates the area and perimeter of a rectangle with length=12 and width=8. Print both results with labels!`,
+    hint: `Area = length * width. Perimeter = 2 * (length + width)`,
+    tips: [`abs(-5) gives 5 — it removes the negative sign!`, `round(3.14159, 2) rounds to 2 decimal places`]
+  },
+  {
+    id: 3, world: 0, title: "Ask the User — Input!", xp: 60,
+    icon: "🎤", tags: ["input","interaction","type-conversion"],
+    desc: "Make your programs interactive with input()",
+    theory: `So far your programs only talk <em>to</em> the user. Now let's make them <em>listen</em> too!<br><br>
+<code>input("question")</code> pauses the program and waits for the user to type something.<br><br>
+⚠️ <strong>Important:</strong> <code>input()</code> always gives back a <strong>string</strong> (text), even if the user types a number!<br><br>
+To do math with it, you must convert:<br>
+• <code>int("12")</code> → converts to integer 12<br>
+• <code>float("3.14")</code> → converts to decimal 3.14`,
+    analogy: `📞 <strong>Think of input() like answering a phone call!</strong> Your program calls the user, waits for them to answer, and saves what they said in a variable.`,
+    example: `<span class="cm"># Basic input</span>
+name = <span class="fn">input</span>(<span class="str">"What is your name? "</span>)
+<span class="fn">print</span>(<span class="str">"Hello,"</span>, name, <span class="str">"! 👋"</span>)
+
+<span class="cm"># Input + type conversion for math</span>
+age_text = <span class="fn">input</span>(<span class="str">"How old are you? "</span>)
+age = <span class="fn">int</span>(age_text)        <span class="cm"># Convert to number!</span>
+future_age = age + <span class="num">10</span>
+<span class="fn">print</span>(<span class="str">"In 10 years you'll be"</span>, future_age)
+
+<span class="cm"># One-line shortcut</span>
+score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your score: "</span>))
+<span class="fn">print</span>(<span class="str">"Double your score:"</span>, score * <span class="num">2</span>)`,
+    starter: `# Personal info collector!
+print("=== Tell Me About You! ===")
+name = input("Your name: ")
+city = input("Your city: ")
+num = int(input("Pick a number 1-10: "))
+
+print("--- Your Profile ---")
+print("Name:", name)
+print("City:", city)
+print("Your number doubled:", num * 2)`,
+    challenge: `Create a "Future Calculator" — ask the user their name, current age, and a dream age. Print how many years until they reach their dream age, and how many years they've lived!`,
+    hint: `years_to_dream = dream_age - current_age`,
+    tips: [`str(42) converts a number back to text`, `print("Hello " + name) joins strings with +`]
+  },
+  {
+    id: 4, world: 0, title: "String Magic 🪄", xp: 60,
+    icon: "🔤", tags: ["strings","methods","f-strings"],
+    desc: "Slice, join, and transform text like a wizard!",
+    theory: `Strings are text data (wrapped in quotes). Python gives strings <strong>superpowers</strong> called methods — functions built into every string!<br><br>
+Key string methods:<br>
+• <code>.upper()</code> — MAKE IT SHOUT<br>
+• <code>.lower()</code> — make it quiet<br>
+• <code>.title()</code> — Make It Title Case<br>
+• <code>.replace(old, new)</code> — swap words<br>
+• <code>.len()</code> — wait, it's <code>len(text)</code><br>
+• <code>.strip()</code> — remove spaces from edges<br><br>
+<strong>f-strings</strong> are the coolest way to mix variables and text:<br>
+<code>f"Hello, {name}! You are {age} years old."</code>`,
+    analogy: `🎨 <strong>Strings are like Play-Doh!</strong> You can stretch them, squish them, cut them, paint them different colors — but it's always the same clay. String methods let you reshape text without permanently breaking it.`,
+    example: `name = <span class="str">"python hero"</span>
+
+<span class="fn">print</span>(name.<span class="fn">upper</span>())       <span class="cm"># PYTHON HERO</span>
+<span class="fn">print</span>(name.<span class="fn">title</span>())       <span class="cm"># Python Hero</span>
+<span class="fn">print</span>(<span class="fn">len</span>(name))           <span class="cm"># 11</span>
+<span class="fn">print</span>(name.<span class="fn">replace</span>(<span class="str">"hero"</span>, <span class="str">"legend"</span>))
+
+<span class="cm"># f-strings — the coolest way!</span>
+hero = <span class="str">"Arjun"</span>
+level = <span class="num">7</span>
+<span class="fn">print</span>(<span class="str">f"Coder <span class="fn">{hero}</span> is at level <span class="fn">{level}</span>! 🔥"</span>)
+<span class="fn">print</span>(<span class="str">f"Next level needs <span class="fn">{level * 100}</span> XP"</span>)
+
+<span class="cm"># String slicing [start:end]</span>
+word = <span class="str">"Programming"</span>
+<span class="fn">print</span>(word[<span class="num">0</span>])        <span class="cm"># P  (first letter)</span>
+<span class="fn">print</span>(word[<span class="num">0</span>:<span class="num">4</span>])      <span class="cm"># Prog</span>
+<span class="fn">print</span>(word[-<span class="num">3</span>:])      <span class="cm"># ing (last 3)</span>`,
+    starter: `# String wizard challenge!
+city = "bengaluru"
+animal = "python snake"
+sentence = "  hello there!  "
+
+# Transform them!
+print(city.title())             # Bengaluru
+print(animal.upper())           # PYTHON SNAKE
+print(sentence.strip())         # hello there!
+print(len(city))
+
+# f-string magic
+name = "Rahul"
+score = 850
+print(f"Player {name} has scored {score} points! 🏆")`,
+    challenge: `Ask the user for their full name. Print: 1) How many letters in their name 2) Their name in ALL CAPS 3) Their name reversed 4) A cool greeting using f-string!`,
+    hint: `reversed name: name[::-1]  |  length: len(name)`,
+    tips: [`name.count("a") counts how many times 'a' appears`, `"Ha" * 3 gives "HaHaHa" — repeat strings with *!`]
+  },
+
+  // ---- WORLD 1 ----
+  {
+    id: 5, world: 1, title: "If You Can... Conditions!", xp: 60,
+    icon: "🤔", tags: ["if","else","conditions","boolean"],
+    desc: "Teach Python to make decisions with if/else",
+    theory: `Sometimes your program needs to make a <strong>decision</strong>. That's what <code>if</code> is for!<br><br>
+<strong>Structure:</strong><br>
+<code>if condition:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>do this (if True)</code><br>
+<code>else:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>do this instead (if False)</code><br><br>
+Comparison operators:<br>
+• <code>==</code> equal to (note: TWO equals signs!)<br>
+• <code>!=</code> NOT equal to<br>
+• <code>&gt;</code> greater than, <code>&lt;</code> less than<br>
+• <code>&gt;=</code> greater or equal, <code>&lt;=</code> less or equal<br><br>
+⚠️ The <strong>indentation</strong> (4 spaces) is critical — Python uses it to know which code belongs inside the if!`,
+    analogy: `🚦 <strong>if/else is a traffic light for your code!</strong> Red = stop (else path), Green = go (if path). Python checks the condition — if it's True, green light! If False, red light, take the other road.`,
+    example: `age = <span class="num">13</span>
+
+<span class="kw">if</span> age >= <span class="num">13</span>:
+    <span class="fn">print</span>(<span class="str">"You're a teenager! 🎉"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Not a teen yet!"</span>)
+
+<span class="cm"># Nested if with user input</span>
+password = <span class="fn">input</span>(<span class="str">"Enter password: "</span>)
+<span class="kw">if</span> password == <span class="str">"python123"</span>:
+    <span class="fn">print</span>(<span class="str">"✅ Access granted! Welcome, hero!"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"❌ Wrong password! Try again!"</span>)`,
+    starter: `# Can you ride the rollercoaster?
+height = int(input("Enter your height in cm: "))
+
+if height >= 140:
+    print("✅ You can ride! Enjoy! 🎢")
+else:
+    needed = 140 - height
+    print(f"❌ Sorry! You need {needed} more cm to ride.")
+
+# Bonus: check if number is positive or negative
+number = int(input("Enter a number: "))
+if number > 0:
+    print(f"{number} is positive! 👍")
+else:
+    print(f"{number} is not positive.")`,
+    challenge: `Build a "Grade Checker" — ask the user for their exam score (0-100). If score >= 90 print "A Grade! 🏆", else if >= 75 print "B Grade! 👍", else if >= 60 print "C Grade 📚", else print "Keep trying! 💪"`,
+    hint: `Use if/elif/elif/else! Check from highest to lowest.`,
+    tips: [`and / or combine conditions: if age > 12 and score > 80:`, `not flips a condition: if not is_raining:`]
+  },
+  {
+    id: 6, world: 1, title: "Many Choices — elif!", xp: 60,
+    icon: "🔀", tags: ["elif","multiple conditions","logic"],
+    desc: "Handle more than two options with elif",
+    theory: `What if you need more than two choices? Use <code>elif</code> (else if)!<br><br>
+<strong>Structure:</strong><br>
+<code>if first condition:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>...</code><br>
+<code>elif second condition:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>...</code><br>
+<code>elif third condition:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>...</code><br>
+<code>else:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>if nothing above was true</code><br><br>
+Python checks top to bottom and stops at the FIRST True condition.`,
+    analogy: `🎮 <strong>elif is like a menu selector in a video game!</strong> Press 1 for attack, press 2 for defend, press 3 for magic, press anything else for help. Only ONE option runs!`,
+    example: `day = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Day number (1-7)? "</span>))
+
+<span class="kw">if</span> day == <span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">"Monday — Back to school! 📚"</span>)
+<span class="kw">elif</span> day == <span class="num">2</span>:
+    <span class="fn">print</span>(<span class="str">"Tuesday — Science day! 🔬"</span>)
+<span class="kw">elif</span> day == <span class="num">3</span>:
+    <span class="fn">print</span>(<span class="str">"Wednesday — Halfway there! 🎯"</span>)
+<span class="kw">elif</span> day >= <span class="num">4</span> <span class="kw">and</span> day <= <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">"Almost weekend! 🎉"</span>)
+<span class="kw">elif</span> day >= <span class="num">6</span>:
+    <span class="fn">print</span>(<span class="str">"WEEKEND! 🎮🎉"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Invalid day!"</span>)`,
+    starter: `# Weather activity suggester!
+weather = input("What's the weather? (sunny/rainy/cloudy/snowy): ").lower()
+
+if weather == "sunny":
+    print("🌞 Perfect for a bike ride or cricket!")
+elif weather == "rainy":
+    print("🌧️ Great day to read or play board games!")
+elif weather == "cloudy":
+    print("☁️ Good for a walk or outdoor photography!")
+elif weather == "snowy":
+    print("❄️ Build a snowman or make hot chocolate!")
+else:
+    print("I don't know that weather, sorry!")`,
+    challenge: `Build a "BMI Category Checker" — ask for weight (kg) and height (m). Calculate BMI = weight / (height ** 2). Print: <18.5 = Underweight, 18.5-24.9 = Healthy, 25-29.9 = Overweight, >=30 = Obese`,
+    hint: `BMI = weight / (height * height) or weight / (height ** 2)`,
+    tips: [`You can chain conditions: 18.5 <= bmi < 25`, `.lower() makes input comparison easier (sunny = SUNNY)`]
+  },
+  {
+    id: 7, world: 1, title: "While Loops ♾️", xp: 70,
+    icon: "🔄", tags: ["while","loops","repetition"],
+    desc: "Repeat code while a condition is true",
+    theory: `A <strong>while loop</strong> keeps repeating code AS LONG AS a condition is True.<br><br>
+<strong>Structure:</strong><br>
+<code>while condition:</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>do this over and over</code><br><br>
+⚠️ <strong>Danger: Infinite Loop!</strong> If the condition never becomes False, your program runs forever! Always make sure something inside the loop changes to eventually stop it.<br><br>
+<code>break</code> — immediately exit the loop<br>
+<code>continue</code> — skip to next iteration`,
+    analogy: `🎡 <strong>while loop is like a Ferris wheel!</strong> It keeps going around (repeating) as long as tickets remain (condition is True). When tickets run out, it stops!`,
+    example: `<span class="cm"># Count from 1 to 5</span>
+count = <span class="num">1</span>
+<span class="kw">while</span> count <= <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">f"Count: <span class="fn">{count}</span>"</span>)
+    count = count + <span class="num">1</span>    <span class="cm"># or: count += 1</span>
+
+<span class="cm"># Keep asking until correct</span>
+secret = <span class="str">"dragon"</span>
+guess = <span class="str">""</span>
+attempts = <span class="num">0</span>
+<span class="kw">while</span> guess != secret:
+    guess = <span class="fn">input</span>(<span class="str">"Guess the magic word: "</span>)
+    attempts += <span class="num">1</span>
+    <span class="kw">if</span> guess != secret:
+        <span class="fn">print</span>(<span class="str">"❌ Nope, try again!"</span>)
+<span class="fn">print</span>(<span class="str">f"✅ Correct! Took {attempts} attempts!"</span>)`,
+    starter: `# Countdown rocket launch!
+countdown = 10
+while countdown > 0:
+    print(f"🚀 T-minus {countdown}...")
+    countdown -= 1  # Same as countdown = countdown - 1
+print("🔥 BLAST OFF! 🚀")
+
+print()
+# Sum of numbers until user types 0
+total = 0
+print("Enter numbers to add (0 to stop):")
+num = int(input("> "))
+while num != 0:
+    total += num
+    print(f"Running total: {total}")
+    num = int(input("> "))
+print(f"Final total: {total}")`,
+    challenge: `Build a "Number Guessing Game"! Pick a secret number (e.g., 42). The user keeps guessing until they get it right. After each guess, print "Too high!" or "Too low!". Count how many tries!`,
+    hint: `secret = 42. Start a while loop: while guess != secret. Use int(input()) for guesses.`,
+    tips: [`count += 1 is shorthand for count = count + 1`, `while True: with break inside is a common pattern for menus!`]
+  },
+  {
+    id: 8, world: 1, title: "For Loops 🔁", xp: 70,
+    icon: "🎯", tags: ["for","range","iteration"],
+    desc: "Loop through sequences easily with for",
+    theory: `A <strong>for loop</strong> repeats code for each item in a collection (like a list or a range of numbers).<br><br>
+<strong>With range():</strong><br>
+<code>for i in range(5):</code> → i goes 0, 1, 2, 3, 4<br>
+<code>for i in range(1, 6):</code> → i goes 1, 2, 3, 4, 5<br>
+<code>for i in range(0, 10, 2):</code> → i goes 0, 2, 4, 6, 8 (step 2)<br><br>
+<strong>With strings:</strong><br>
+<code>for letter in "Python":</code> → letter gets each character<br><br>
+<code>range(start, stop, step)</code> — start is included, stop is NOT`,
+    analogy: `📚 <strong>for loop is like handing out books!</strong> "For each student in the class, hand one book." It automatically goes through every student — no need to count manually.`,
+    example: `<span class="cm"># Print 1 to 10</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+<span class="fn">print</span>()  <span class="cm"># New line</span>
+
+<span class="cm"># Times table for 7</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    <span class="fn">print</span>(<span class="str">f"7 × {i} = {7 * i}"</span>)
+
+<span class="cm"># Loop through a string</span>
+name = <span class="str">"Python"</span>
+<span class="kw">for</span> letter <span class="kw">in</span> name:
+    <span class="fn">print</span>(letter, end=<span class="str">"-"</span>)
+
+<span class="cm"># Pattern with nested loops</span>
+<span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="str">"⭐"</span> * row)`,
+    starter: `# FizzBuzz - a classic coding challenge!
+# For numbers 1-30:
+# - Print "Fizz" if divisible by 3
+# - Print "Buzz" if divisible by 5
+# - Print "FizzBuzz" if divisible by BOTH
+# - Otherwise print the number
+
+for i in range(1, 31):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)`,
+    challenge: `Draw a triangle of stars using nested for loops. Row 1 has 1 star, row 2 has 2, ..., row 7 has 7. Then also draw an inverted triangle (7 down to 1)!`,
+    hint: `Outer loop for rows, inner: print("★" * row). For inverted: range(7, 0, -1)`,
+    tips: [`enumerate(list) gives both index and value`, `print(i, end="") prevents new lines`]
+  },
+  {
+    id: 9, world: 1, title: "Break, Continue & Else 🎛️", xp: 70,
+    icon: "⏩", tags: ["break","continue","loop control"],
+    desc: "Control exactly how your loops behave",
+    theory: `Python gives you three tools to control loops:<br><br>
+• <code>break</code> — <strong>immediately stop</strong> the loop and jump out<br>
+• <code>continue</code> — <strong>skip this iteration</strong> and go to the next one<br>
+• <code>else</code> on a loop — runs if loop finished WITHOUT a break<br><br>
+These are like emergency controls — they give you precise power over when your loop runs.`,
+    analogy: `🎮 <strong>Gaming controls!</strong> break = QUIT GAME, continue = SKIP CUTSCENE, the loop else = END CREDITS (only shown if you finished normally, not quit)`,
+    example: `<span class="cm"># break — stop when found</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+    <span class="kw">if</span> i == <span class="num">5</span>:
+        <span class="fn">print</span>(<span class="str">"Found 5! Stopping!"</span>)
+        <span class="kw">break</span>
+    <span class="fn">print</span>(i)
+
+<span class="cm"># continue — skip even numbers</span>
+<span class="fn">print</span>(<span class="str">"Odd numbers:"</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    <span class="kw">if</span> i % <span class="num">2</span> == <span class="num">0</span>:
+        <span class="kw">continue</span>
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+
+<span class="cm"># while + break pattern</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    cmd = <span class="fn">input</span>(<span class="str">"Type 'quit' to exit: "</span>)
+    <span class="kw">if</span> cmd == <span class="str">"quit"</span>:
+        <span class="fn">print</span>(<span class="str">"Bye! 👋"</span>)
+        <span class="kw">break</span>
+    <span class="fn">print</span>(<span class="str">f"You typed: {cmd}"</span>)`,
+    starter: `# Find all numbers divisible by 3 but NOT by 9, up to 50
+print("Numbers divisible by 3 but not 9:")
+for i in range(1, 51):
+    if i % 9 == 0:
+        continue    # Skip multiples of 9
+    if i % 3 == 0:
+        print(i, end=" ")
+print()
+
+# Search for a name in a list
+names = ["Aarav", "Priya", "Rahul", "Sneha", "Dev"]
+target = input("Search for a name: ")
+for name in names:
+    if name == target:
+        print(f"✅ Found '{name}'!")
+        break
+else:
+    print(f"❌ '{target}' not found!")`,
+    challenge: `Build a "Prime Number Finder" — find all prime numbers from 2 to 100. A prime has no factors other than 1 and itself. Use break inside an inner loop to test divisibility!`,
+    hint: `For each number n, check if any number from 2 to n-1 divides it evenly. If none do, it's prime!`,
+    tips: [`break breaks out of the INNER-MOST loop only`, `for..else is rarely used but powerful for search algorithms!`]
+  },
+
+  // ---- WORLD 2 ----
+  {
+    id: 10, world: 2, title: "Your Own Spells — Functions!", xp: 80,
+    icon: "🪄", tags: ["functions","def","DRY principle"],
+    desc: "Create reusable blocks of code called functions",
+    theory: `A <strong>function</strong> is a reusable block of code you can run anytime by calling its name.<br><br>
+<strong>Define:</strong> <code>def function_name():</code><br>
+<strong>Call:</strong> <code>function_name()</code><br><br>
+Why use functions?<br>
+• <strong>Don't Repeat Yourself (DRY)</strong> — write once, use many times<br>
+• Code is organized and readable<br>
+• Easy to fix (change in one place)<br><br>
+Function name rules: lowercase, underscores for spaces (<code>my_function</code>)`,
+    analogy: `🧁 <strong>Functions are like baking recipes!</strong> Write the recipe once (define). Bake it whenever you want (call). Change the recipe once and ALL future bakes change too!`,
+    example: `<span class="cm"># Define a function</span>
+<span class="kw">def</span> <span class="fn">greet</span>():
+    <span class="fn">print</span>(<span class="str">"Hello! Welcome to Python! 🐍"</span>)
+    <span class="fn">print</span>(<span class="str">"Let's code something amazing!"</span>)
+
+<span class="cm"># Call the function</span>
+<span class="fn">greet</span>()
+<span class="fn">greet</span>()   <span class="cm"># Call it again! Code runs twice!</span>
+
+<span class="kw">def</span> <span class="fn">draw_star_line</span>():
+    <span class="fn">print</span>(<span class="str">"⭐" * <span class="num">20</span></span>)
+
+<span class="kw">def</span> <span class="fn">show_menu</span>():
+    <span class="fn">draw_star_line</span>()
+    <span class="fn">print</span>(<span class="str">"   🐍 PYTHON QUIZ GAME"</span>)
+    <span class="fn">draw_star_line</span>()
+
+<span class="fn">show_menu</span>()`,
+    starter: `# Create a birthday song function!
+def happy_birthday():
+    print("🎂 Happy Birthday to you!")
+    print("🎂 Happy Birthday to you!")
+    print("🎂 Happy Birthday dear friend!")
+    print("🎂 Happy Birthday to you!")
+    print("🎉 🎊 🥳")
+
+# Call it!
+happy_birthday()
+
+# Function for a menu separator
+def separator():
+    print("=" * 30)
+
+separator()
+print("  Welcome to My Program")
+separator()`,
+    challenge: `Create three functions: draw_box() (prints a box of stars), print_header(title_text) that takes a title, and a main() function that calls both to display a nice title card!`,
+    hint: `def draw_box(): with print("*" * 20) and print("*" + " " * 18 + "*") etc.`,
+    tips: [`Functions must be DEFINED before they are CALLED`, `A function can call other functions inside it!`]
+  },
+  {
+    id: 11, world: 2, title: "Parameters — Sending Data!", xp: 80,
+    icon: "📨", tags: ["parameters","arguments","functions"],
+    desc: "Make functions more powerful by passing in data",
+    theory: `<strong>Parameters</strong> let you send data INTO a function, so it can work with different values each time.<br><br>
+<code>def greet(name):</code> — name is a parameter<br>
+<code>greet("Maya")</code> — "Maya" is the argument<br><br>
+<strong>Multiple parameters:</strong><br>
+<code>def add(num1, num2):</code><br><br>
+<strong>Default parameters:</strong><br>
+<code>def greet(name, emoji="👋"):</code><br>
+If you don't pass emoji, it uses 👋 automatically!`,
+    analogy: `📮 <strong>Parameters are like a mail slot!</strong> The function is the house. You push different letters (arguments) through the slot (parameters), and the house processes whatever you send!`,
+    example: `<span class="cm"># Function with one parameter</span>
+<span class="kw">def</span> <span class="fn">greet_hero</span>(name):
+    <span class="fn">print</span>(<span class="str">f"⚡ Welcome, mighty hero {name}!"</span>)
+
+<span class="fn">greet_hero</span>(<span class="str">"Arjun"</span>)
+<span class="fn">greet_hero</span>(<span class="str">"Priya"</span>)
+
+<span class="cm"># Multiple parameters</span>
+<span class="kw">def</span> <span class="fn">introduce</span>(name, age, city):
+    <span class="fn">print</span>(<span class="str">f"I'm {name}, {age} years old, from {city}! 🏙️"</span>)
+
+<span class="fn">introduce</span>(<span class="str">"Kavya"</span>, <span class="num">12</span>, <span class="str">"Bangalore"</span>)
+
+<span class="cm"># Default parameter</span>
+<span class="kw">def</span> <span class="fn">power_up</span>(name, level=<span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">f"{name} powered up to level {level}! 💥"</span>)
+
+<span class="fn">power_up</span>(<span class="str">"Rohan"</span>)           <span class="cm"># Uses default level=1</span>
+<span class="fn">power_up</span>(<span class="str">"Sneha"</span>, <span class="num">7</span>)        <span class="cm"># Uses level=7</span>`,
+    starter: `# Calculator functions!
+def add(a, b):
+    print(f"{a} + {b} = {a + b}")
+
+def multiply(a, b):
+    print(f"{a} × {b} = {a * b}")
+
+def power(base, exp=2):
+    print(f"{base} to the power {exp} = {base ** exp}")
+
+# Call them!
+add(15, 27)
+multiply(6, 8)
+power(5)        # Uses default exp=2
+power(2, 10)    # Overrides default`,
+    challenge: `Create a "Profile Card" function that takes: name, age, city, hobby. It should print a nicely formatted card with borders. Call it 3 times with different people!`,
+    hint: `def profile_card(name, age, city, hobby): then print with f-strings and a border!`,
+    tips: [`*args lets a function accept ANY number of arguments`, `Keyword arguments: introduce(age=12, name="Raj") — order doesn't matter!`]
+  },
+  {
+    id: 12, world: 2, title: "Return Values — Get Answers Back!", xp: 80,
+    icon: "📬", tags: ["return","output","functions"],
+    desc: "Make functions give you answers back with return",
+    theory: `Until now, functions just PRINTED things. But <code>return</code> makes a function give back a VALUE that you can store and use!<br><br>
+<code>def double(n):</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>return n * 2</code><br><br>
+<code>result = double(5)</code> → result is 10<br><br>
+Why return instead of print?<br>
+• You can store the result: <code>area = calculate_area(5, 3)</code><br>
+• You can use it in math: <code>total = price + calculate_tax(price)</code><br>
+• You can pass it to other functions!`,
+    analogy: `🏧 <strong>return is like an ATM!</strong> You put in your card + PIN (parameters), the machine processes it, then gives BACK your cash (return value). print() just shows you the balance — it doesn't give you the money!`,
+    example: `<span class="cm"># Function that RETURNS a value</span>
+<span class="kw">def</span> <span class="fn">square</span>(n):
+    <span class="kw">return</span> n * n
+
+result = <span class="fn">square</span>(<span class="num">9</span>)
+<span class="fn">print</span>(<span class="str">f"9 squared = {result}"</span>)   <span class="cm"># 81</span>
+
+<span class="cm"># Use return values in math</span>
+<span class="kw">def</span> <span class="fn">celsius_to_fahrenheit</span>(c):
+    <span class="kw">return</span> (c * <span class="num">9</span>/<span class="num">5</span>) + <span class="num">32</span>
+
+temp_c = <span class="num">37</span>
+temp_f = <span class="fn">celsius_to_fahrenheit</span>(temp_c)
+<span class="fn">print</span>(<span class="str">f"Body temperature: {temp_f}°F"</span>)
+
+<span class="cm"># Return multiple values!</span>
+<span class="kw">def</span> <span class="fn">min_max</span>(a, b, c):
+    <span class="kw">return</span> <span class="fn">min</span>(a, b, c), <span class="fn">max</span>(a, b, c)
+
+smallest, largest = <span class="fn">min_max</span>(<span class="num">15</span>, <span class="num">3</span>, <span class="num">27</span>)
+<span class="fn">print</span>(<span class="str">f"Min: {smallest}, Max: {largest}"</span>)`,
+    starter: `# Build a mini calculator with return!
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    if b == 0:
+        return "Error: Can't divide by zero!"
+    return a / b
+
+# Use the functions!
+x, y = 24, 6
+print(f"{x} + {y} = {add(x, y)}")
+print(f"{x} - {y} = {subtract(x, y)}")
+print(f"{x} × {y} = {multiply(x, y)}")
+print(f"{x} ÷ {y} = {divide(x, y)}")`,
+    challenge: `Write a "Grade Calculator" — function calc_grade(score) that returns the letter grade (A/B/C/D/F). Write another function get_gpa(grade) that returns GPA for that grade. Chain them together!`,
+    hint: `calc_grade returns "A","B"... then use: gpa = get_gpa(calc_grade(85))`,
+    tips: [`return stops the function immediately`, `A function without return gives back None`]
+  },
+  {
+    id: 13, world: 2, title: "Scope — Where Variables Live 🔭", xp: 70,
+    icon: "🔭", tags: ["scope","global","local"],
+    desc: "Understand where variables exist in Python",
+    theory: `<strong>Scope</strong> is where a variable can be "seen" and used.<br><br>
+• <strong>Local variable</strong> — created INSIDE a function, only usable there<br>
+• <strong>Global variable</strong> — created OUTSIDE all functions, usable everywhere<br><br>
+Functions have their own "bubble" — they can READ global variables, but to CHANGE them you need <code>global variable_name</code>.<br><br>
+Best practice: <strong>avoid global variables when possible!</strong> Use parameters and return instead.`,
+    analogy: `🏠 <strong>Scope is like your house!</strong> Global = living room (everyone can see it). Local = your bedroom (only you can access it). Your bedroom lamp doesn't exist in the kitchen!`,
+    example: `<span class="cm"># Global variable</span>
+game_score = <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">earn_points</span>(points):
+    <span class="kw">global</span> game_score     <span class="cm"># Tell Python: use the global one</span>
+    game_score += points
+    <span class="fn">print</span>(<span class="str">f"+{points} points! Total: {game_score}"</span>)
+
+<span class="fn">earn_points</span>(<span class="num">100</span>)
+<span class="fn">earn_points</span>(<span class="num">250</span>)
+<span class="fn">print</span>(<span class="str">f"Final score: {game_score}"</span>)
+
+<span class="cm"># Local variable stays inside</span>
+<span class="kw">def</span> <span class="fn">secret_code</span>():
+    hidden = <span class="str">"DRAGON123"</span>    <span class="cm"># Local!</span>
+    <span class="fn">print</span>(<span class="str">f"Inside: {hidden}"</span>)
+
+<span class="fn">secret_code</span>()
+<span class="cm"># print(hidden)  # ❌ ERROR! hidden doesn't exist here!</span>`,
+    starter: `# Score tracker game demo
+high_score = 0  # Global
+
+def play_round(player_name):
+    global high_score
+    score = 0
+    for i in range(1, 4):
+        points = i * 50
+        score += points
+        print(f"  Round {i}: +{points} pts")
+    print(f"  {player_name} total: {score}")
+    if score > high_score:
+        high_score = score
+        print(f"  🏆 NEW HIGH SCORE: {high_score}!")
+    return score
+
+print("--- Player 1 ---")
+play_round("Arjun")
+print("--- Player 2 ---")
+play_round("Priya")
+print(f"\nAll-time High Score: {high_score}")`,
+    challenge: `Build a "Bank Account" program with functions: deposit(amount), withdraw(amount), check_balance(). Use a global variable for balance. Test it by depositing 1000, withdrawing 300, checking balance!`,
+    hint: `balance = 0 as global. def deposit(amount): global balance; balance += amount`,
+    tips: [`Constants (NEVER change) in ALL_CAPS: MAX_SCORE = 100`, `Using global too much = messy code. Prefer return!`]
+  },
+
+  // ---- WORLD 3 ----
+  {
+    id: 14, world: 3, title: "Lists — Collections!", xp: 80,
+    icon: "📋", tags: ["lists","arrays","indexing"],
+    desc: "Store multiple items in a single variable",
+    theory: `A <strong>list</strong> stores multiple values in order, in ONE variable.<br><br>
+<code>fruits = ["apple", "mango", "banana"]</code><br><br>
+Access items by <strong>index</strong> (position, starting at 0):<br>
+• <code>fruits[0]</code> → "apple" (first)<br>
+• <code>fruits[1]</code> → "mango" (second)<br>
+• <code>fruits[-1]</code> → "banana" (last!)<br>
+• <code>fruits[0:2]</code> → ["apple", "mango"] (slice)<br><br>
+Lists can hold ANY mix of types: numbers, strings, even other lists!`,
+    analogy: `🎒 <strong>Lists are like your school bag!</strong> Each pocket has a number (index 0, 1, 2...). You reach into pocket 0 for your pencil, pocket 1 for your ruler. The bag holds everything in one place!`,
+    example: `<span class="cm"># Creating a list</span>
+heroes = [<span class="str">"Iron Man"</span>, <span class="str">"Spider-Man"</span>, <span class="str">"Black Panther"</span>]
+scores = [<span class="num">95</span>, <span class="num">87</span>, <span class="num">73</span>, <span class="num">91</span>, <span class="num">88</span>]
+
+<span class="cm"># Accessing items</span>
+<span class="fn">print</span>(heroes[<span class="num">0</span>])      <span class="cm"># Iron Man</span>
+<span class="fn">print</span>(heroes[-<span class="num">1</span>])     <span class="cm"># Black Panther</span>
+<span class="fn">print</span>(heroes[<span class="num">1</span>:<span class="num">3</span>])    <span class="cm"># ['Spider-Man','Black Panther']</span>
+
+<span class="cm"># List info</span>
+<span class="fn">print</span>(<span class="fn">len</span>(heroes))     <span class="cm"># 3</span>
+<span class="fn">print</span>(<span class="fn">sum</span>(scores))     <span class="cm"># total</span>
+<span class="fn">print</span>(<span class="fn">max</span>(scores))     <span class="cm"># highest</span>
+<span class="fn">print</span>(<span class="fn">min</span>(scores))     <span class="cm"># lowest</span>
+
+<span class="cm"># Loop through list</span>
+<span class="kw">for</span> hero <span class="kw">in</span> heroes:
+    <span class="fn">print</span>(<span class="str">f"🦸 {hero}"</span>)`,
+    starter: `# Class grade book!
+student_names = ["Aarav", "Priya", "Rohit", "Sneha", "Dev"]
+marks = [87, 92, 74, 96, 81]
+
+print("=== CLASS REPORT ===")
+for i in range(len(student_names)):
+    print(f"{student_names[i]}: {marks[i]} marks")
+
+print(f"\nClass Average: {sum(marks) / len(marks):.1f}")
+print(f"Highest Scorer: {student_names[marks.index(max(marks))]}")
+print(f"Lowest Scorer: {student_names[marks.index(min(marks))]}")`,
+    challenge: `Create a "Shopping Cart" — a list of item names and a list of prices. Calculate: total cost, number of items, most expensive item, average price, and list items under ₹100!`,
+    hint: `items = ["Book","Pen","Bag"] prices = [200, 30, 500]. Use zip(items, prices) to loop both!`,
+    tips: [`in operator: if "apple" in fruits:`, `sorted(list) returns a sorted copy without changing original`]
+  },
+  {
+    id: 15, world: 3, title: "List Superpowers! ⚡", xp: 80,
+    icon: "⚡", tags: ["list methods","append","sort"],
+    desc: "Add, remove, sort, and transform lists",
+    theory: `Lists have built-in <strong>methods</strong> (functions) that let you modify them:<br><br>
+• <code>.append(item)</code> — add to end<br>
+• <code>.insert(i, item)</code> — add at position i<br>
+• <code>.remove(item)</code> — remove first match<br>
+• <code>.pop()</code> — remove & return last item<br>
+• <code>.sort()</code> — sort in place (A-Z or 0-9)<br>
+• <code>.reverse()</code> — flip the order<br>
+• <code>.count(item)</code> — how many times item appears<br>
+• <code>.index(item)</code> — find position of item`,
+    analogy: `🗄️ <strong>List methods are like a filing cabinet!</strong> append = add a new file at the back, insert = file it in the middle, remove = throw one away, sort = alphabetize everything!`,
+    example: `<span class="cm"># Dynamic to-do list</span>
+todos = [<span class="str">"Do homework"</span>, <span class="str">"Water plants"</span>]
+
+todos.<span class="fn">append</span>(<span class="str">"Read book"</span>)      <span class="cm"># Add to end</span>
+todos.<span class="fn">insert</span>(<span class="num">0</span>, <span class="str">"Wake up early"</span>)  <span class="cm"># Add at start</span>
+<span class="fn">print</span>(todos)
+
+todos.<span class="fn">remove</span>(<span class="str">"Water plants"</span>)    <span class="cm"># Remove by value</span>
+done = todos.<span class="fn">pop</span>()               <span class="cm"># Remove last</span>
+<span class="fn">print</span>(<span class="str">f"Completed: {done}"</span>)
+
+<span class="cm"># Sorting</span>
+numbers = [<span class="num">64</span>, <span class="num">25</span>, <span class="num">12</span>, <span class="num">92</span>, <span class="num">3</span>]
+numbers.<span class="fn">sort</span>()
+<span class="fn">print</span>(numbers)   <span class="cm"># [3, 12, 25, 64, 92]</span>
+
+names = [<span class="str">"Zara"</span>, <span class="str">"Arjun"</span>, <span class="str">"Maya"</span>]
+names.<span class="fn">sort</span>()
+<span class="fn">print</span>(names)     <span class="cm"># ['Arjun', 'Maya', 'Zara']</span>`,
+    starter: `# High score leaderboard!
+scores = []
+
+# Add scores
+scores.append(850)
+scores.append(1200)
+scores.append(650)
+scores.append(980)
+scores.append(1100)
+
+print("Original:", scores)
+
+# Sort highest first
+scores.sort(reverse=True)
+print("Ranked:", scores)
+print(f"🥇 Champion score: {scores[0]}")
+print(f"🥈 2nd place: {scores[1]}")
+print(f"🥉 3rd place: {scores[2]}")
+
+# Count how many scored over 900
+top_players = [s for s in scores if s > 900]
+print(f"\nTop performers: {len(top_players)}")`,
+    challenge: `Build a "Contact Manager" — start with an empty list. Add 5 contacts (strings). Sort them, display them, let the user search for a contact, and let them remove one contact!`,
+    hint: `contacts = [] then .append(), .sort(), and use input() for search/remove names`,
+    tips: [`List comprehension: [x*2 for x in numbers] creates a new list!`, `copy = original[:] or original.copy() — makes a separate copy!`]
+  },
+  {
+    id: 16, world: 3, title: "Dictionaries — Label Your Data 🏷️", xp: 80,
+    icon: "📖", tags: ["dictionary","key","value"],
+    desc: "Store data as key-value pairs — like a real dictionary!",
+    theory: `A <strong>dictionary</strong> stores data as <strong>key: value</strong> pairs. Instead of remembering positions (like in lists), you use labels (keys) to find values!<br><br>
+<code>person = {"name": "Arjun", "age": 12, "city": "Pune"}</code><br><br>
+Access: <code>person["name"]</code> → "Arjun"<br>
+Add/Update: <code>person["hobby"] = "coding"</code><br>
+Delete: <code>del person["age"]</code><br>
+Check: <code>"name" in person</code> → True<br><br>
+Keys must be unique! Values can be anything.`,
+    analogy: `📱 <strong>Dictionaries are like your phone contacts!</strong> You don't remember phone number position 47 — you look up "Mom" (the key) and get her number (the value). Way easier!`,
+    example: `<span class="cm"># Create a dictionary</span>
+hero = {
+    <span class="str">"name"</span>: <span class="str">"Riya"</span>,
+    <span class="str">"level"</span>: <span class="num">8</span>,
+    <span class="str">"power"</span>: <span class="str">"Telepathy"</span>,
+    <span class="str">"xp"</span>: <span class="num">2450</span>
+}
+
+<span class="cm"># Access values</span>
+<span class="fn">print</span>(hero[<span class="str">"name"</span>])        <span class="cm"># Riya</span>
+<span class="fn">print</span>(hero[<span class="str">"level"</span>])       <span class="cm"># 8</span>
+
+<span class="cm"># Update value</span>
+hero[<span class="str">"level"</span>] = <span class="num">9</span>
+hero[<span class="str">"xp"</span>] += <span class="num">500</span>
+
+<span class="cm"># Add new key</span>
+hero[<span class="str">"team"</span>] = <span class="str">"Phoenix Squad"</span>
+
+<span class="cm"># Loop through dictionary</span>
+<span class="kw">for</span> key, value <span class="kw">in</span> hero.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="str">f"{key}: {value}"</span>)`,
+    starter: `# Student report card using dictionary
+student = {
+    "name": "Kavya",
+    "grade": 6,
+    "subjects": {
+        "Math": 92,
+        "Science": 88,
+        "English": 95,
+        "Hindi": 79,
+        "Social": 84
+    }
+}
+
+print(f"=== Report Card: {student['name']} ===")
+print(f"Grade: {student['grade']}")
+print()
+total = 0
+for subject, marks in student["subjects"].items():
+    grade = "A" if marks >= 90 else "B" if marks >= 80 else "C"
+    print(f"  {subject}: {marks} ({grade})")
+    total += marks
+avg = total / len(student["subjects"])
+print(f"\nAverage: {avg:.1f}")`,
+    challenge: `Build a "Pokemon Card" program — create a dictionary for a Pokemon with: name, type, hp, attacks (list), and weaknesses. Print all its stats in a formatted way!`,
+    hint: `pokemon = {"name":"Pikachu", "type":"Electric", "hp":35, "attacks":["Thunder","Tackle"]}`,
+    tips: [`dict.get("key", default) is safe — no crash if key missing!`, `.keys(), .values(), .items() — three ways to loop through a dict`]
+  },
+  {
+    id: 17, world: 3, title: "Loops + Data = Power! 💥", xp: 90,
+    icon: "💥", tags: ["loops","lists","dicts","nested"],
+    desc: "Combine loops with lists and dicts for real data processing",
+    theory: `Now you know loops AND data structures — combine them for real power!<br><br>
+Common patterns:<br>
+• Loop through a list of dicts (database-style!)<br>
+• Build a list using a loop (accumulate data)<br>
+• <strong>List comprehension</strong> — create a list in ONE line:<br>
+&nbsp;&nbsp;<code>[expression for item in list if condition]</code><br><br>
+Example: <code>evens = [x for x in range(20) if x % 2 == 0]</code>`,
+    analogy: `🏭 <strong>Loops + data structures are like a factory!</strong> Raw materials (data) go in on a conveyor belt (loop). Each station does something (process). Finished products come out the other end (new list/dict)!`,
+    example: `<span class="cm"># List of dicts — like a database!</span>
+students = [
+    {<span class="str">"name"</span>: <span class="str">"Arjun"</span>,  <span class="str">"score"</span>: <span class="num">85</span>},
+    {<span class="str">"name"</span>: <span class="str">"Priya"</span>,  <span class="str">"score"</span>: <span class="num">92</span>},
+    {<span class="str">"name"</span>: <span class="str">"Rahul"</span>,  <span class="str">"score"</span>: <span class="num">67</span>},
+    {<span class="str">"name"</span>: <span class="str">"Sneha"</span>,  <span class="str">"score"</span>: <span class="num">95</span>},
+]
+
+<span class="cm"># Find toppers (score >= 90)</span>
+toppers = [s[<span class="str">"name"</span>] <span class="kw">for</span> s <span class="kw">in</span> students <span class="kw">if</span> s[<span class="str">"score"</span>] >= <span class="num">90</span>]
+<span class="fn">print</span>(<span class="str">"Toppers:"</span>, toppers)
+
+<span class="cm"># Calculate averages</span>
+avg = <span class="fn">sum</span>(s[<span class="str">"score"</span>] <span class="kw">for</span> s <span class="kw">in</span> students) / <span class="fn">len</span>(students)
+<span class="fn">print</span>(<span class="str">f"Class average: {avg:.1f}"</span>)
+
+<span class="cm"># List comprehension</span>
+squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>)]
+<span class="fn">print</span>(squares)`,
+    starter: `# Inventory management system!
+inventory = [
+    {"item": "Apple", "price": 10, "quantity": 50},
+    {"item": "Mango", "price": 25, "quantity": 30},
+    {"item": "Banana", "price": 5, "quantity": 100},
+    {"item": "Orange", "price": 15, "quantity": 45},
+]
+
+print("=== INVENTORY REPORT ===")
+total_value = 0
+for product in inventory:
+    value = product["price"] * product["quantity"]
+    total_value += value
+    print(f"{product['item']:10} ₹{product['price']:4} x {product['quantity']:3} = ₹{value}")
+
+print(f"\nTotal inventory value: ₹{total_value}")
+
+# Expensive items (price > 12)
+expensive = [p["item"] for p in inventory if p["price"] > 12]
+print(f"Premium items: {expensive}")`,
+    challenge: `Create a "Mini Grade Book" — a list of 5 student dicts (name + marks for 3 subjects). Calculate each student's average, find the class topper, and print who passed (avg >= 60) and who failed!`,
+    hint: `avg = sum(marks_list) / 3. Topper = max(students, key=lambda s: s["avg"])`,
+    tips: [`zip() combines two lists: for name, score in zip(names, scores):`, `sorted(students, key=lambda s: s["score"]) sorts by a key!`]
+  },
+
+  // ---- WORLD 4 ----
+  {
+    id: 18, world: 4, title: "Project: Number Guessing Game 🎮", xp: 120,
+    icon: "🎮", tags: ["project","game","while loop"],
+    desc: "Build a complete, playable number guessing game!",
+    theory: `Time to put it all together! You'll build a real game using everything you've learned:<br><br>
+✅ Variables (secret number, guesses, tries)<br>
+✅ While loop (keep playing until correct)<br>
+✅ If/elif/else (too high / too low / correct!)<br>
+✅ Input (user enters guesses)<br>
+✅ Functions (organize the code)<br>
+✅ f-strings (nice messages)<br><br>
+This is a <strong>complete project</strong> — follow each step and build it up!`,
+    analogy: `🎯 <strong>Every app you use was built the same way!</strong> Small pieces put together: a variable here, a loop there, an if-else decision. Now YOU are the developer!`,
+    example: `<span class="kw">import</span> <span class="bi">random</span>
+
+<span class="kw">def</span> <span class="fn">number_game</span>():
+    secret = <span class="bi">random</span>.<span class="fn">randint</span>(<span class="num">1</span>, <span class="num">100</span>)
+    tries = <span class="num">0</span>
+    max_tries = <span class="num">7</span>
+    
+    <span class="fn">print</span>(<span class="str">"🎮 GUESS THE NUMBER!"</span>)
+    <span class="fn">print</span>(<span class="str">f"I'm thinking of 1–100. You have {max_tries} tries!"</span>)
+    
+    <span class="kw">while</span> tries < max_tries:
+        guess = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">f"\nGuess #{tries+1}: "</span>))
+        tries += <span class="num">1</span>
+        
+        <span class="kw">if</span> guess == secret:
+            <span class="fn">print</span>(<span class="str">f"🏆 CORRECT! {secret} in {tries} tries!"</span>)
+            <span class="kw">return</span>
+        <span class="kw">elif</span> guess < secret:
+            left = max_tries - tries
+            <span class="fn">print</span>(<span class="str">f"📈 Too low! ({left} tries left)"</span>)
+        <span class="kw">else</span>:
+            left = max_tries - tries
+            <span class="fn">print</span>(<span class="str">f"📉 Too high! ({left} tries left)"</span>)
+    
+    <span class="fn">print</span>(<span class="str">f"\n😢 Game over! The number was {secret}"</span>)
+
+<span class="fn">number_game</span>()`,
+    starter: `import random
+
+def number_game():
+    secret = random.randint(1, 100)
+    tries = 0
+    max_tries = 7
+    
+    print("=" * 35)
+    print("  🎮 GUESS THE NUMBER GAME")
+    print("=" * 35)
+    print(f"Guess a number 1-100. You have {max_tries} tries!")
+    
+    while tries < max_tries:
+        try:
+            guess = int(input(f"\nTry {tries+1}/{max_tries}: "))
+        except:
+            print("⚠️ Please enter a valid number!")
+            continue
+            
+        tries += 1
+        
+        if guess == secret:
+            print(f"\n🎉 AMAZING! You got it in {tries} tries!")
+            if tries <= 3:
+                print("🏆 LEGENDARY! You're a mind-reader!")
+            elif tries <= 5:
+                print("⭐ Great job!")
+            return True
+        elif guess < secret:
+            diff = secret - guess
+            if diff > 30:
+                print("🔥 Way too low!")
+            else:
+                print("📈 A little low...")
+        else:
+            diff = guess - secret
+            if diff > 30:
+                print("🧊 Way too high!")
+            else:
+                print("📉 A little high...")
+    
+    print(f"\n😢 Game over! The answer was {secret}!")
+    return False
+
+# Play the game!
+number_game()`,
+    challenge: `UPGRADE the game! Add: 1) A score system (fewer tries = more points) 2) Ask if the user wants to play again 3) Track wins vs losses across multiple games 4) Show the best score ever!`,
+    hint: `Wrap the game in while play_again == "yes". Track wins = 0, losses = 0 outside the loop.`,
+    tips: [`random.randint(a, b) gives a random number including both a and b`, `try/except handles errors like typing letters instead of numbers`]
+  },
+  {
+    id: 19, world: 4, title: "Project: Mad Libs Generator 📝", xp: 120,
+    icon: "📝", tags: ["project","strings","input","f-strings"],
+    desc: "Build a hilarious Mad Libs story generator!",
+    theory: `Mad Libs is a game where you fill in blanks in a story with random words — the result is hilariously silly!<br><br>
+This project practices:<br>
+✅ Multiple <code>input()</code> calls<br>
+✅ f-strings to weave words into a story<br>
+✅ Functions for different stories<br>
+✅ Lists of stories<br>
+✅ String formatting<br><br>
+You'll create multiple stories that the user can pick from!`,
+    analogy: `📚 <strong>Mad Libs is like a story template!</strong> Like a form letter: "Dear [NAME], I am writing to inform you of your [ADJECTIVE] skills..." Just fill in the blanks!`,
+    example: `<span class="kw">def</span> <span class="fn">space_adventure</span>():
+    <span class="fn">print</span>(<span class="str">"🚀 THE SPACE ADVENTURE"</span>)
+    name  = <span class="fn">input</span>(<span class="str">"A hero's name: "</span>)
+    color = <span class="fn">input</span>(<span class="str">"A color: "</span>)
+    num   = <span class="fn">input</span>(<span class="str">"A number: "</span>)
+    food  = <span class="fn">input</span>(<span class="str">"A food: "</span>)
+    verb  = <span class="fn">input</span>(<span class="str">"A verb (-ing): "</span>)
+    planet = <span class="fn">input</span>(<span class="str">"A planet: "</span>)
+    
+    story = <span class="str">f"""
+    🚀 Captain {name} flew a {color} spaceship.
+    After {num} hours of {verb}, they landed on {planet}!
+    The aliens greeted them with bowls of {food}.
+    "{food}?!" yelled Captain {name}. 
+    "WE COME IN PEACE... and hunger!"
+    """</span>
+    <span class="fn">print</span>(story)`,
+    starter: `def get_words():
+    print("🎭 MAD LIBS: THE SCHOOL ADVENTURE")
+    print("-" * 35)
+    print("Answer these questions!")
+    name = input("A classmate's name: ")
+    subject = input("A school subject: ")
+    animal = input("A funny animal: ")
+    food = input("A weird food: ")
+    verb_past = input("An action (past tense, e.g. jumped): ")
+    adjective = input("A describing word: ")
+    place = input("A place: ")
+    number = input("A number: ")
+    
+    print("\n" + "🎉 " * 10)
+    print("         YOUR MAD LIBS STORY!")
+    print("🎉 " * 10)
+    
+    print(f"""
+One {adjective} morning, {name} arrived at school 
+riding a {animal}! The teacher screamed and {verb_past} 
+out of the classroom window straight into a pile of {food}.
+
+"Today we're studying {subject}!" announced the principal 
+from {place}. "{number} students must solve the mystery!" 
+
+{name} grabbed the {animal} and said: "Don't worry everyone, 
+I am the greatest {subject} expert in the world! 
+I once ate {number} plates of {food} just to prove it!"
+
+Everyone cheered, and they all {verb_past} happily ever after.
+THE END 🎉""")
+
+# Run the generator!
+get_words()
+print("\nWant to play again? Reload the page!")`,
+    challenge: `Create 3 different Mad Libs stories (adventure, space, school). Let the user CHOOSE which story to play. Add a function for each story. Make them funny!`,
+    hint: `Print a menu: "1. Adventure 2. Space 3. School". Use if/elif to call the right function!`,
+    tips: [`Triple quotes """...""" allow multi-line strings`, `You can store stories as templates in a list!`]
+  },
+  {
+    id: 20, world: 4, title: "Project: Smart Calculator 🧮", xp: 150,
+    icon: "🧮", tags: ["project","functions","while","calculator"],
+    desc: "Build a feature-rich calculator with memory!",
+    theory: `Your final solo project — a Smart Calculator that:<br><br>
+✅ Does all math operations<br>
+✅ Has a running memory<br>
+✅ Keeps history of calculations<br>
+✅ Has a clean menu interface<br>
+✅ Handles errors gracefully<br><br>
+This is the <strong>capstone project</strong> of World 4! Master this and you're ready for Python Level 2!<br><br>
+Congrats on making it this far — you are now an intermediate Python coder! 🎓`,
+    analogy: `🏗️ <strong>Big projects are just small functions working together!</strong> A calculator seems complex, but break it down: one function for each operation + a loop for the menu + a list for history. Simple pieces, amazing result!`,
+    example: `<span class="kw">def</span> <span class="fn">add</span>(a, b):      <span class="kw">return</span> a + b
+<span class="kw">def</span> <span class="fn">subtract</span>(a, b): <span class="kw">return</span> a - b
+<span class="kw">def</span> <span class="fn">multiply</span>(a, b): <span class="kw">return</span> a * b
+<span class="kw">def</span> <span class="fn">divide</span>(a, b):
+    <span class="kw">if</span> b == <span class="num">0</span>: <span class="kw">return</span> <span class="str">"Error: ÷0!"</span>
+    <span class="kw">return</span> a / b
+
+history = []
+
+<span class="kw">def</span> <span class="fn">calculate</span>(a, op, b):
+    ops = {<span class="str">"+"</span>: add, <span class="str">"-"</span>: subtract, <span class="str">"*"</span>: multiply, <span class="str">"/"</span>: divide}
+    <span class="kw">if</span> op <span class="kw">not in</span> ops:
+        <span class="kw">return</span> <span class="str">"Unknown operator"</span>
+    result = ops[op](a, b)
+    history.<span class="fn">append</span>(<span class="str">f"{a} {op} {b} = {result}"</span>)
+    <span class="kw">return</span> result`,
+    starter: `# 🧮 SMART CALCULATOR v1.0
+
+def add(a, b): return a + b
+def subtract(a, b): return a - b
+def multiply(a, b): return a * b
+def divide(a, b):
+    if b == 0:
+        return "Error: Cannot divide by zero! 🚫"
+    return a / b
+def power(a, b): return a ** b
+def modulo(a, b): return a % b
+
+history = []
+memory = 0
+
+def show_menu():
+    print("\n" + "═" * 35)
+    print("  🧮 SMART CALCULATOR v1.0")
+    print("═" * 35)
+    print("  Operations: + - * / ** %")
+    print("  Commands: H = history, M = memory")
+    print("             MC = clear memory, Q = quit")
+    print("═" * 35)
+
+def calculator():
+    global memory
+    show_menu()
+    
+    while True:
+        print()
+        user_input = input("Enter (e.g. 5 + 3) or command: ").strip().upper()
+        
+        if user_input == "Q":
+            print("👋 Thanks for calculating! Goodbye!")
+            break
+        elif user_input == "H":
+            if history:
+                print("\n📜 Calculation History:")
+                for i, h in enumerate(history[-5:], 1):
+                    print(f"  {i}. {h}")
+            else:
+                print("No history yet!")
+            continue
+        elif user_input == "M":
+            print(f"💾 Memory: {memory}")
+            continue
+        elif user_input == "MC":
+            memory = 0
+            print("🗑️ Memory cleared!")
+            continue
+        
+        # Parse the calculation
+        try:
+            parts = user_input.lower().split()
+            if len(parts) != 3:
+                print("⚠️  Format: number operator number (e.g. 10 + 5)")
+                continue
+            
+            a = float(parts[0])
+            op = parts[1]
+            b = float(parts[2])
+            
+            ops = {"+": add, "-": subtract, "*": multiply, "/": divide, "**": power, "%": modulo}
+            
+            if op not in ops:
+                print(f"⚠️  Unknown operator: {op}")
+                continue
+            
+            result = ops[op](a, b)
+            
+            if isinstance(result, float) and result == int(result):
+                result = int(result)
+            
+            calc_str = f"{a} {op} {b} = {result}"
+            history.append(calc_str)
+            memory = result if isinstance(result, (int, float)) else memory
+            
+            print(f"  ✅ {calc_str}")
+            print(f"  💾 Stored in memory!")
+            
+        except ValueError:
+            print("⚠️  Please enter valid numbers!")
+
+calculator()`,
+    challenge: `MEGA UPGRADE: Add 1) Scientific functions: sqrt, abs, factorial (import math) 2) "Use memory" option that replaces a number with memory value 3) Save history to a "session report" at the end 4) Let user set custom precision (decimal places)!`,
+    hint: `import math, then math.sqrt(n), math.factorial(n). For precision: round(result, decimal_places)`,
+    tips: [`isinstance(x, float) checks if x is a float`, `format(3.14159, ".2f") gives "3.14" — nice rounding for display`]
+  }
+];
+
+// ==================== QUIZ DATA ====================
+const QUIZ_DATA = {
+  easy: [
+    {q:"Which function displays text in Python?",opts:["display()","write()","print()","show()"],ans:2,exp:"print() is Python's built-in function to show output on screen!"},
+    {q:"What does this print?\nprint(2 + 3 * 4)",code:"print(2 + 3 * 4)",opts:["20","14","24","10"],ans:1,exp:"Multiplication happens BEFORE addition: 3*4=12, then 2+12=14"},
+    {q:"Which correctly creates a variable?",opts:["var name = 'Ali'","name := 'Ali'","name = 'Ali'","let name = 'Ali'"],ans:2,exp:"In Python, use = to assign values. No 'var' or 'let' needed!"},
+    {q:"What does len('Python') return?",opts:["5","6","7","8"],ans:1,exp:"len() counts characters: P-y-t-h-o-n = 6 characters"},
+    {q:"Which loop repeats a FIXED number of times?",opts:["while loop","if loop","for loop","do loop"],ans:2,exp:"for loops with range() repeat a specific number of times!"},
+    {q:"What is the output of print('Ha' * 3)?",opts:["Ha3","HaHaHa","Ha Ha Ha","Error"],ans:1,exp:"In Python, string * number repeats the string: 'Ha' * 3 = 'HaHaHa'"},
+    {q:"How do you get user input in Python?",opts:["read()","get()","input()","scan()"],ans:2,exp:"input() is Python's function to read text from the user"},
+    {q:"What does // do?",opts:["Regular division","Comment","Floor division","Power"],ans:2,exp:"// is floor division — it gives the whole number part: 17//5 = 3"},
+  ],
+  medium: [
+    {q:"What will this print?",code:"x = 10\nif x > 5:\n    print('Big')\nelse:\n    print('Small')",opts:["Small","Big","10","Error"],ans:1,exp:"x is 10, which IS > 5, so the if block runs and prints 'Big'"},
+    {q:"What does range(2, 8, 2) produce?",opts:["2,4,6,8","2,4,6","2,3,4,5,6,7,8","0,2,4,6"],ans:1,exp:"range(start, stop, step): starts at 2, goes by 2s, stops BEFORE 8: 2,4,6"},
+    {q:"What is the output?",code:"nums = [10, 20, 30]\nprint(nums[-1])",opts:["10","20","30","Error"],ans:2,exp:"Negative index: -1 always gets the LAST item, which is 30"},
+    {q:"What does a function RETURN?",opts:["It prints a value","It exits Python","It gives back a value","It creates a variable"],ans:2,exp:"return gives back a value from the function that the caller can use!"},
+    {q:"What is the output?",code:"def double(n):\n    return n * 2\nprint(double(6))",opts:["6","12","double6","Error"],ans:1,exp:"double(6) returns 6*2 = 12, which print() then displays"},
+    {q:"Which creates an empty list?",opts:["list = {}","list = ()","list = []","list = <>"],ans:2,exp:"Square brackets [] make a list. {} makes a dict, () makes a tuple."},
+    {q:"What does .append() do?",opts:["Removes last item","Adds item to the end","Sorts the list","Reverses the list"],ans:1,exp:".append(item) adds a new item to the END of a list"},
+    {q:"What's the correct f-string syntax?",opts:['f"Hello {name}"','f"Hello (name)"','f"Hello $name"','f"Hello %name%"'],ans:0,exp:"f-strings use curly braces {} to embed variables: f'Hello {name}'"},
+  ],
+  hard: [
+    {q:"What's the output?",code:"x = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)",opts:["[1,2,3]","[1,2,3,4]","[4]","Error"],ans:1,exp:"Lists are passed by REFERENCE! y = x means both point to the SAME list, so x also changes!"},
+    {q:"What does this return?",code:"def mystery(n):\n    if n <= 1:\n        return n\n    return mystery(n-1) + mystery(n-2)\nprint(mystery(6))",opts:["6","8","13","21"],ans:1,exp:"This is the Fibonacci sequence! mystery(6) = 8 (the 7th Fibonacci number counting from 0)"},
+    {q:"What's the output?",code:"d = {'a':1,'b':2,'c':3}\nprint([k for k,v in d.items() if v > 1])",opts:["[2,3]","['b','c']","{'b':2,'c':3}","Error"],ans:1,exp:"Dict comprehension iterates key,value pairs. Condition v>1 filters keys where value>1: 'b' and 'c'"},
+    {q:"Which is TRUE about scope?",opts:["Local vars are global","global keyword lets you modify a global var inside a function","All vars are global","Functions can't access global vars"],ans:1,exp:"The 'global' keyword inside a function allows modifying a variable defined at the module level"},
+    {q:"What does enumerate() do?",opts:["Creates a range","Gives index + value pairs","Counts items","Reverses a list"],ans:1,exp:"enumerate(list) gives you (index, value) pairs: for i, val in enumerate(mylist)"},
+    {q:"What's the output?",code:"nums = [3, 1, 4, 1, 5, 9]\nprint(sorted(nums, reverse=True)[:3])",opts:["[3,1,4]","[9,5,4]","[1,1,3]","[9,5,3]"],ans:1,exp:"sorted() with reverse=True gives [9,5,4,3,1,1], then [:3] slices the first 3: [9,5,4]"},
+    {q:"What does *args do in a function?",opts:["Returns multiple values","Accepts any number of positional arguments","Makes all args optional","Passes a list"],ans:1,exp:"*args lets a function accept any number of arguments: def add(*args): return sum(args)"},
+    {q:"What is a lambda function?",opts:["A loop","A class","A small one-line function","A module"],ans:2,exp:"Lambda creates a small anonymous function: double = lambda x: x * 2 — same as def double(x): return x*2"},
+  ]
+};
+
+// ==================== ACHIEVEMENTS ====================
+const ACHIEVEMENTS_DEF = [
+  {id:"first_lesson", icon:"🌱", title:"First Step!", desc:"Complete your very first lesson", condition: s => s.lessonsCompleted >= 1},
+  {id:"world1_done",  icon:"🌄", title:"Valley Master", desc:"Complete all lessons in Python Valley", condition: s => WORLDS[0].lessons.every(id => s.completedLessons.includes(id))},
+  {id:"world2_done",  icon:"🌴", title:"Jungle Navigator", desc:"Complete all lessons in Logic Jungle", condition: s => WORLDS[1].lessons.every(id => s.completedLessons.includes(id))},
+  {id:"world3_done",  icon:"⛰️", title:"Mountain Climber", desc:"Complete Function Mountains!", condition: s => WORLDS[2].lessons.every(id => s.completedLessons.includes(id))},
+  {id:"world4_done",  icon:"🐉", title:"Dragon Tamer", desc:"Conquer Data Dragon's Den!", condition: s => WORLDS[3].lessons.every(id => s.completedLessons.includes(id))},
+  {id:"world5_done",  icon:"🏔️", title:"Summit Conqueror", desc:"Reach the Project Summit!", condition: s => WORLDS[4].lessons.every(id => s.completedLessons.includes(id))},
+  {id:"xp_100",       icon:"⭐", title:"Rising Star", desc:"Earn 100 XP", condition: s => s.xp >= 100},
+  {id:"xp_500",       icon:"💫", title:"Star Power", desc:"Earn 500 XP", condition: s => s.xp >= 500},
+  {id:"xp_1000",      icon:"🌟", title:"Supernova", desc:"Earn 1000 XP! Incredible!", condition: s => s.xp >= 1000},
+  {id:"xp_2000",      icon:"🚀", title:"Rocket Coder", desc:"Earn 2000 XP! Legendary!", condition: s => s.xp >= 2000},
+  {id:"quiz_first",   icon:"🧩", title:"Quiz Starter", desc:"Complete your first quiz", condition: s => s.quizzesDone >= 1},
+  {id:"quiz_ace",     icon:"🏆", title:"Quiz Ace", desc:"Score 100% on any quiz", condition: s => s.perfectQuiz === true},
+  {id:"level5",       icon:"⚡", title:"Level 5!", desc:"Reach player level 5", condition: s => s.level >= 5},
+  {id:"level10",      icon:"👑", title:"Python Royalty", desc:"Reach player level 10!", condition: s => s.level >= 10},
+  {id:"streak3",      icon:"🔥", title:"On Fire!", desc:"3-day coding streak!", condition: s => s.streak >= 3},
+  {id:"streak7",      icon:"💥", title:"Week Warrior", desc:"7-day coding streak!", condition: s => s.streak >= 7},
+  {id:"all_done",     icon:"🐍", title:"Python MASTER!", desc:"Complete ALL lessons!", condition: s => s.lessonsCompleted >= LESSONS.length},
+];
+
+// ==================== STATE ====================
+let state = {
+  xp: 0, level: 1, streak: 0, lastDate: null,
+  completedLessons: [], quizzesDone: 0, perfectQuiz: false,
+  earnedAchievements: [], currentLesson: null, currentWorld: null,
+};
+
+const XP_PER_LEVEL = 300;
+
+function loadState(){
+  const saved = localStorage.getItem("pykids_state");
+  if(saved){ try{ state = {...state, ...JSON.parse(saved)}; }catch(e){} }
+  updateStreak();
+}
+
+function saveState(){
+  localStorage.setItem("pykids_state", JSON.stringify(state));
+}
+
+function updateStreak(){
+  const today = new Date().toDateString();
+  if(state.lastDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if(state.lastDate === yesterday){ state.streak += 1; }
+  else if(state.lastDate !== today){ state.streak = 1; }
+  state.lastDate = today;
+  saveState();
+}
+
+function get_level(xp){ return Math.floor(xp / XP_PER_LEVEL) + 1; }
+function get_xp_pct(xp){ return ((xp % XP_PER_LEVEL) / XP_PER_LEVEL) * 100; }
+
+function get_stats(){
+  return {
+    xp: state.xp,
+    level: get_level(state.xp),
+    lessonsCompleted: state.completedLessons.length,
+    badgesEarned: state.earnedAchievements.length,
+    streak: state.streak,
+    quizzesDone: state.quizzesDone,
+    perfectQuiz: state.perfectQuiz,
+    completedLessons: state.completedLessons,
+  };
+}
+
+// ==================== XP & ACHIEVEMENTS ====================
+function awardXP(amount, label=""){
+  state.xp += amount;
+  state.level = get_level(state.xp);
+  saveState();
+  updateNavXP();
+  showXPPopup(amount);
+  checkAchievements();
+}
+
+function showXPPopup(amount){
+  const el = document.createElement("div");
+  el.className = "xp-popup";
+  el.textContent = `+${amount} XP!`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function showToast(icon, text, xp=""){
+  document.getElementById("toast-icon").textContent = icon;
+  document.getElementById("toast-text").textContent = text;
+  document.getElementById("toast-xp").textContent = xp ? `+${xp} XP` : "";
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+function checkAchievements(){
+  const stats = get_stats();
+  ACHIEVEMENTS_DEF.forEach(ach => {
+    if(!state.earnedAchievements.includes(ach.id) && ach.condition(stats)){
+      state.earnedAchievements.push(ach.id);
+      saveState();
+      setTimeout(() => showToast(ach.icon, `Badge Unlocked: ${ach.title}!`, ""), 500);
+      renderAchievements();
+    }
+  });
+}
+
+function updateNavXP(){
+  const xp = state.xp;
+  const level = get_level(xp);
+  const pct = get_xp_pct(xp);
+  document.getElementById("nav-xp").textContent = xp;
+  document.getElementById("nav-xp-bar").style.width = pct + "%";
+  document.getElementById("nav-level").textContent = level;
+  document.getElementById("streak-val").textContent = state.streak;
+  // Stats cards
+  const s = document.getElementById("stat-xp"); if(s) s.textContent = xp;
+  const l = document.getElementById("stat-level"); if(l) l.textContent = level;
+  const d = document.getElementById("stat-done"); if(d) d.textContent = state.completedLessons.length;
+  const b = document.getElementById("stat-badges"); if(b) b.textContent = state.earnedAchievements.length;
+  const st = document.getElementById("stat-streak"); if(st) st.textContent = state.streak;
+}
+
+// ==================== NAVIGATION ====================
+let currentSection = "home";
+
+function navigate(section){
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(section).classList.add("active");
+  const navBtns = document.querySelectorAll(".nav-btn");
+  navBtns.forEach(b => { if(b.textContent.toLowerCase().includes(section.replace("worlds","world").replace("achievements","badge"))) b.classList.add("active"); });
+  currentSection = section;
+  window.scrollTo(0,0);
+  if(section === "home") renderHome();
+  if(section === "worlds") renderWorlds();
+  if(section === "achievements") renderAchievements();
+  if(section === "quiz" && !document.getElementById("quiz-container").querySelector(".quiz-card")) {}
+}
+
+function goHome(){ navigate("home"); }
+
+function backToList(){
+  if(state.currentWorld !== null){
+    openWorld(state.currentWorld);
+  } else {
+    navigate("worlds");
+  }
+}
+
+// ==================== HOME ====================
+function renderHome(){
+  updateNavXP();
+  renderWorldCards("home-worlds", true);
+  const tips = [
+    "💡 Python was named after Monty Python's Flying Circus — not the snake!",
+    "🐍 Python is used by NASA, Google, Netflix, and Instagram!",
+    "⚡ You can write a working game in Python in under 50 lines of code!",
+    "🔢 Python handles huge numbers natively: 2**1000 just works!",
+    "🌍 Python is the #1 most popular programming language in the world!",
+    "🤖 Most AI and Machine Learning programs are written in Python!",
+    "🎮 The game Minecraft was written in Java, but many mods use Python!",
+    "📊 Scientists use Python to analyze data from space telescopes!"
+  ];
+  document.getElementById("daily-tip").textContent = tips[Math.floor(Math.random() * tips.length)];
+}
+
+// ==================== WORLDS ====================
+function worldProgress(worldIdx){
+  const world = WORLDS[worldIdx];
+  const done = world.lessons.filter(id => state.completedLessons.includes(id)).length;
+  return {done, total: world.lessons.length, pct: Math.round((done/world.lessons.length)*100)};
+}
+
+function isWorldUnlocked(worldIdx){
+  if(worldIdx === 0) return true;
+  const prev = WORLDS[worldIdx - 1];
+  return prev.lessons.every(id => state.completedLessons.includes(id));
+}
+
+function renderWorldCards(containerId, showProgress=false){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.innerHTML = WORLDS.map((w, i) => {
+    const unlocked = isWorldUnlocked(i);
+    const prog = worldProgress(i);
+    return `<div class="world-card ${unlocked?'':'locked'}" 
+      style="--wc:${w.color}" 
+      onclick="${unlocked ? `openWorld(${i})` : `showToast('🔒','Complete World ${i} first!','')` }">
+      <span class="world-status ${unlocked?'':'locked'}">${unlocked?(prog.pct===100?'Complete':'Active'):'Locked 🔒'}</span>
+      <div class="world-icon">${w.icon}</div>
+      <div class="world-title">${w.title}</div>
+      <div class="world-sub">${w.desc}</div>
+      ${showProgress ? `<div class="world-progress"><div class="world-progress-bar" style="width:${prog.pct}%;background:${w.color}"></div></div>
+      <div style="font-size:.72rem;color:var(--dim);margin-top:4px">${prog.done}/${prog.total} lessons</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderWorlds(){
+  renderWorldCards("worlds-list", true);
+}
+
+function openWorld(worldIdx){
+  state.currentWorld = worldIdx;
+  const world = WORLDS[worldIdx];
+  document.getElementById("ll-icon").textContent = world.icon;
+  document.getElementById("ll-title").textContent = world.title;
+  document.getElementById("ll-desc").textContent = world.desc;
+
+  const worldLessons = LESSONS.filter(l => l.world === worldIdx);
+  const container = document.getElementById("lessons-container");
+
+  container.innerHTML = worldLessons.map((lesson, idx) => {
+    const done = state.completedLessons.includes(lesson.id);
+    const unlocked = idx === 0 || state.completedLessons.includes(worldLessons[idx-1].id);
+    return `<div class="lesson-item ${done?'done':''} ${!unlocked?'locked-item':''}"
+      onclick="${unlocked ? `openLesson(${lesson.id})` : `showToast('🔒','Complete the previous lesson first!','')`}">
+      <div class="lesson-num">${done ? '✅' : (idx+1)}</div>
+      <div class="lesson-info">
+        <div class="lesson-title">${lesson.icon} ${lesson.title}</div>
+        <div class="lesson-desc">${lesson.desc}</div>
+        <div class="lesson-tags">${lesson.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="xp-badge">⭐ ${lesson.xp}</div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById("lesson-list").classList.add("active");
+  window.scrollTo(0,0);
+}
+
+// ==================== LESSON VIEWER ====================
+function openLesson(lessonId){
+  const lesson = LESSONS.find(l => l.id === lessonId);
+  if(!lesson) return;
+  state.currentLesson = lessonId;
+
+  document.getElementById("lesson-world-badge").textContent = WORLDS[lesson.world].title;
+  document.getElementById("lesson-xp-val").textContent = lesson.xp;
+
+  const prevLesson = LESSONS.find(l => l.world === lesson.world && l.id === lessonId - 1);
+  const nextLesson = LESSONS.find(l => l.world === lesson.world && l.id === lessonId + 1);
+  const done = state.completedLessons.includes(lessonId);
+
+  const area = document.getElementById("lesson-content-area");
+  area.innerHTML = `
+  <div class="lesson-card">
+    <h2>${lesson.icon} ${lesson.title} ${done?'<span style="color:var(--green);font-size:1rem">✅ Done!</span>':''}</h2>
+    <div class="subtitle">${lesson.desc}</div>
+    
+    <div class="theory-block">
+      <h3>📚 Learn It</h3>
+      ${lesson.theory}
+    </div>
+
+    <div class="analogy-box">${lesson.analogy}</div>
+
+    <div class="code-label">🔍 EXAMPLE CODE</div>
+    <div class="example-block">
+      <div class="code-header">
+        <span>🐍 Python</span>
+        <button class="copy-btn" onclick="copyExample(${lessonId})">Copy</button>
+      </div>
+      <div class="code-content" id="example-${lessonId}">${lesson.example}</div>
+    </div>
+
+    ${lesson.tips ? `<div class="tip-box"><strong>💡 Pro Tips:</strong><ul>${lesson.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : ''}
+
+    <div class="editor-section">
+      <h3>⚡ Try It Yourself!</h3>
+      <div class="editor-wrap">
+        <div class="editor-toolbar">
+          <div class="editor-tabs">
+            <span class="editor-tab active">code.py</span>
+          </div>
+          <button class="run-btn" onclick="runLessonCode(${lessonId})">▶ Run Code</button>
+        </div>
+        <textarea id="lesson-editor-${lessonId}" spellcheck="false">${lesson.starter}</textarea>
+        <div class="output-header"><div class="output-dot"></div> Output</div>
+        <div class="output-area" id="lesson-output-${lessonId}"></div>
+      </div>
+    </div>
+
+    <div class="challenge-box">
+      <h3>🎯 Challenge!</h3>
+      <p>${lesson.challenge}</p>
+      <button class="hint-btn" onclick="toggleHint(${lessonId})">💡 Show Hint</button>
+      <div class="hint-text" id="hint-${lessonId}">🤔 ${lesson.hint}</div>
+    </div>
+  </div>
+
+  <div class="lesson-nav">
+    ${prevLesson ? `<button class="btn btn-outline btn-sm" onclick="openLesson(${prevLesson.id})">← Previous</button>` : '<div></div>'}
+    ${!done ? `<button class="btn btn-gold btn-sm" onclick="completeLesson(${lessonId})">✅ Mark Complete (+${lesson.xp} XP)</button>` : '<span style="color:var(--green);font-weight:800">✅ Completed!</span>'}
+    ${nextLesson ? `<button class="btn btn-primary btn-sm" onclick="openLesson(${nextLesson.id})">Next →</button>` : '<div></div>'}
+  </div>`;
+
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById("lesson-view").classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function completeLesson(lessonId){
+  if(state.completedLessons.includes(lessonId)){
+    showToast("👍","Already completed!","");
+    return;
+  }
+  const lesson = LESSONS.find(l => l.id === lessonId);
+  state.completedLessons.push(lessonId);
+  awardXP(lesson.xp, lesson.title);
+  saveState();
+  showToast("🎉", `Lesson Complete: ${lesson.title}!`, lesson.xp);
+  openLesson(lessonId); // re-render to show completed state
+}
+
+function toggleHint(lessonId){
+  const hint = document.getElementById(`hint-${lessonId}`);
+  hint.style.display = hint.style.display === "block" ? "none" : "block";
+}
+
+function copyExample(lessonId){
+  const el = document.getElementById(`example-${lessonId}`);
+  const text = el.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast("📋","Copied to clipboard!","")).catch(()=>{});
+}
+
+// ==================== PYTHON RUNNER ====================
+function runPython(code, outputEl){
+  outputEl.innerHTML = "";
+  outputEl.style.color = "#f8f8f2";
+
+  function outf(text){
+    outputEl.innerHTML += text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function builtinRead(x){
+    if(Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+      throw "File not found: '" + x + "'";
+    return Sk.builtinFiles["files"][x];
+  }
+
+  Sk.configure({
+    output: outf,
+    read: builtinRead,
+    inputfun: function(prompt){
+      return new Promise(resolve => {
+        const val = window.prompt((prompt || "") + "\n(PyKids input dialog)");
+        resolve(val !== null ? val : "");
+      });
+    },
+    inputfunTakesPrompt: true,
+    execLimit: 10000,
+  });
+
+  const promise = Sk.misceval.asyncToPromise(() => {
+    return Sk.importMainWithBody("<stdin>", false, code, true);
+  });
+
+  promise.then(() => {
+    if(!outputEl.innerHTML) outputEl.innerHTML = `<span style="color:var(--green)">✅ Program ran successfully (no output)</span>`;
+  }).catch(err => {
+    outputEl.innerHTML += `<span style="color:var(--coral)">❌ Error: ${err.toString()}</span>`;
+  });
+}
+
+function runLessonCode(lessonId){
+  const code = document.getElementById(`lesson-editor-${lessonId}`).value;
+  const output = document.getElementById(`lesson-output-${lessonId}`);
+  runPython(code, output);
+  awardXP(5, "Ran code!");
+}
+
+function runPlayground(){
+  const code = document.getElementById("pg-editor").value;
+  const output = document.getElementById("pg-output");
+  output.style.color = "#f8f8f2";
+  runPython(code, output);
+}
+
+function copyOutput(){
+  const text = document.getElementById("pg-output").textContent;
+  navigator.clipboard.writeText(text).then(() => showToast("📋","Output copied!","")).catch(()=>{});
+}
+
+function clearPG(){
+  document.getElementById("pg-editor").value = "";
+  document.getElementById("pg-output").innerHTML = "// Output will appear here...";
+  document.getElementById("pg-output").style.color = "var(--dim)";
+}
+
+const SNIPPETS = {
+  hello: `# Hello World!
+print("Hello, World! 🌍")
+print("Welcome to Python!")
+name = input("What's your name? ")
+print(f"Nice to meet you, {name}!")`,
+  loop: `# For loop examples
+print("Counting up:")
+for i in range(1, 11):
+    print(i, end=" ")
+print()
+
+print("\\nCounting down:")
+for i in range(10, 0, -1):
+    print(i, end=" ")
+print("\\n🚀 Blast off!")`,
+  func: `# Function examples
+def greet(name, emoji="👋"):
+    return f"Hello, {name}! {emoji}"
+
+def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+print(greet("Python Hero"))
+print(greet("Coder", "🔥"))
+print("10! =", factorial(10))`,
+  list: `# List operations
+fruits = ["Apple", "Mango", "Banana", "Pineapple"]
+fruits.append("Orange")
+fruits.sort()
+
+print("All fruits:", fruits)
+print("Count:", len(fruits))
+
+# List comprehension
+long_names = [f for f in fruits if len(f) > 5]
+print("Long names:", long_names)`,
+  guess: `# Number guessing game!
+import random
+secret = random.randint(1, 50)
+tries = 0
+print("I'm thinking of a number 1-50!")
+
+while True:
+    guess = int(input("Your guess: "))
+    tries += 1
+    if guess == secret:
+        print(f"🎉 Correct in {tries} tries!")
+        break
+    elif guess < secret:
+        print("📈 Too low!")
+    else:
+        print("📉 Too high!")`
+};
+
+function insertSnippet(key){
+  document.getElementById("pg-editor").value = SNIPPETS[key] || "";
+}
+
+// ==================== QUIZ ====================
+let quizState = { questions: [], current: 0, score: 0, difficulty: "", answered: false };
+
+function startQuiz(difficulty){
+  const pool = [...QUIZ_DATA[difficulty]].sort(() => Math.random() - .5).slice(0, 6);
+  quizState = { questions: pool, current: 0, score: 0, difficulty, answered: false };
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const container = document.getElementById("quiz-container");
+  const q = quizState.questions[quizState.current];
+  if(!q){ showQuizResult(); return; }
+
+  const progress = ((quizState.current) / quizState.questions.length) * 100;
+
+  container.innerHTML = `
+  <div class="quiz-header-card">
+    <div class="q-counter">Question ${quizState.current + 1} of ${quizState.questions.length}</div>
+    <div class="q-progress"><div class="q-progress-bar" style="width:${progress}%"></div></div>
+    <div style="margin-top:6px;font-size:.8rem;color:var(--dim)">Score: ${quizState.score} / ${quizState.current}</div>
+  </div>
+  <div class="quiz-card">
+    <div class="q-num">${quizState.difficulty.toUpperCase()} · Q${quizState.current + 1}</div>
+    <div class="q-text">${q.q}</div>
+    ${q.code ? `<div class="q-code">${q.code}</div>` : ''}
+    <div class="options-grid" id="options-grid">
+      ${q.opts.map((opt, i) => `<button class="option-btn" onclick="selectAnswer(${i})">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}
+    </div>
+    <div class="q-feedback" id="q-feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+      ${quizState.current + 1 < quizState.questions.length ? 'Next Question →' : 'See Results 🎉'}
+    </button>
+  </div>`;
+}
+
+function selectAnswer(selectedIdx){
+  if(quizState.answered) return;
+  quizState.answered = true;
+
+  const q = quizState.questions[quizState.current];
+  const correct = selectedIdx === q.ans;
+  if(correct) quizState.score++;
+
+  const buttons = document.querySelectorAll(".option-btn");
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if(i === q.ans) btn.classList.add("correct");
+    else if(i === selectedIdx && !correct) btn.classList.add("wrong");
+  });
+
+  const feedback = document.getElementById("q-feedback");
+  feedback.className = `q-feedback show ${correct ? "good" : "bad"}`;
+  feedback.innerHTML = `${correct ? "🎉 Correct!" : "❌ Not quite!"} — ${q.exp}`;
+
+  document.getElementById("next-btn").classList.add("show");
+}
+
+function nextQuestion(){
+  quizState.current++;
+  quizState.answered = false;
+  renderQuestion();
+}
+
+function showQuizResult(){
+  const total = quizState.questions.length;
+  const pct = Math.round((quizState.score / total) * 100);
+  const xpEarned = quizState.score * 15;
+
+  let emoji, grade;
+  if(pct === 100){ emoji = "🏆"; grade = "PERFECT! You're a Python Legend!"; state.perfectQuiz = true; }
+  else if(pct >= 80){ emoji = "🌟"; grade = "Excellent! Keep it up!"; }
+  else if(pct >= 60){ emoji = "👍"; grade = "Good work! Review the lessons!"; }
+  else { emoji = "📚"; grade = "Keep studying — you've got this!"; }
+
+  state.quizzesDone++;
+  awardXP(xpEarned, "Quiz");
+  saveState();
+  checkAchievements();
+
+  document.getElementById("quiz-container").innerHTML = `
+  <div class="quiz-result">
+    <span class="result-emoji">${emoji}</span>
+    <div class="result-score" style="color:${pct>=80?'var(--green)':pct>=60?'var(--gold)':'var(--coral)'}">${quizState.score}/${total}</div>
+    <div class="result-grade">${grade}</div>
+    <div style="font-size:2rem;font-weight:900;color:var(--gold);margin:12px 0">+${xpEarned} XP!</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+      <button class="btn btn-primary" onclick="startQuiz('${quizState.difficulty}')">🔄 Try Again</button>
+      <button class="btn btn-outline" onclick="navigate('quiz')">📚 Change Level</button>
+      <button class="btn btn-gold" onclick="navigate('worlds')">🗺️ Back to Worlds</button>
+    </div>
+  </div>`;
+}
+
+// ==================== ACHIEVEMENTS ====================
+function renderAchievements(){
+  const grid = document.getElementById("achievements-grid");
+  if(!grid) return;
+  grid.innerHTML = ACHIEVEMENTS_DEF.map(ach => {
+    const earned = state.earnedAchievements.includes(ach.id);
+    return `<div class="achievement-card ${earned?'earned':''}">
+      <div class="ach-icon">${ach.icon}</div>
+      <div>
+        <div class="ach-title">${ach.title}</div>
+        <div class="ach-desc">${ach.desc}</div>
+        ${earned ? `<div class="ach-date">✅ Earned!</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ==================== QUICK REFERENCE ====================
+function renderQuickRef(){
+  const refs = [
+    {title:"Variables", code:`name = "Python"\nage = 12\npi = 3.14\nis_cool = True`},
+    {title:"Print & Input", code:`print("Hello!")\nprint("Sum:", 3+4)\nname = input("Name: ")\nnum = int(input("Num: "))`},
+    {title:"If/Elif/Else", code:`if x > 10:\n    print("Big")\nelif x > 5:\n    print("Medium")\nelse:\n    print("Small")`},
+    {title:"For Loop", code:`for i in range(5):\n    print(i)\n\nfor item in my_list:\n    print(item)`},
+    {title:"While Loop", code:`count = 0\nwhile count < 5:\n    print(count)\n    count += 1`},
+    {title:"Functions", code:`def greet(name):\n    return f"Hi, {name}!"\n\nresult = greet("Hero")`},
+    {title:"Lists", code:`fruits = ["apple","mango"]\nfruits.append("kiwi")\nprint(fruits[0])\nfruits.sort()`},
+    {title:"Dictionaries", code:`person = {"name":"Ali", "age":12}\nprint(person["name"])\nperson["city"] = "Delhi"`},
+  ];
+
+  document.getElementById("quick-ref").innerHTML = refs.map(r => `
+  <div class="example-block">
+    <div class="code-header"><span>${r.title}</span></div>
+    <div class="code-content" style="font-size:.8rem;padding:12px">${r.code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</div>
+  </div>`).join('');
+}
+
+// ==================== INIT ====================
+loadState();
+updateNavXP();
+renderHome();
+renderAchievements();
+renderQuickRef();
+checkAchievements();
+</script>
+</body>
+</html>
